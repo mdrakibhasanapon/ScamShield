@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Privacy-respecting minimal permissions. No SMS/Call/Contacts access. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
+    <!-- Camera is strictly optional for QR code scanning & screenshot capture -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ScamShield"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="false"
+        tools:targetApi="34">
+        <!-- Google Mobile Ads (AdMob) App ID -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/admob_app_id" />
+
+        <!-- Splash Screen Activity (Launcher) -->
+        <activity
+            android:name=".ui.splash.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.ScamShield.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Main Dashboard Activity -->
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+
+        <!-- Message/Email Analysis Screen -->
+        <activity
+            android:name=".ui.message.CheckMessageActivity"
+            android:exported="false"
+            android:label="@string/title_check_message"
+            android:parentActivityName=".ui.MainActivity" />
+
+        <!-- URL Analysis Screen -->
+        <activity
+            android:name=".ui.url.CheckUrlActivity"
+            android:exported="false"
+            android:label="@string/title_check_link"
+            android:parentActivityName=".ui.MainActivity" />
+
+        <!-- Screenshot/Image OCR Screen -->
+        <activity
+            android:name=".ui.screenshot.ScreenshotAnalysisActivity"
+            android:exported="false"
+            android:label="@string/title_scan_screenshot"
+            android:parentActivityName=".ui.MainActivity" />
+
+        <!-- QR Code Scanner Screen -->
+        <activity
+            android:name=".ui.qr.QrScanActivity"
+            android:exported="false"
+            android:label="@string/title_scan_qr"
+            android:parentActivityName=".ui.MainActivity" />
+
+        <!-- Result / Security Assessment Screen -->
+        <activity
+            android:name=".ui.result.ResultActivity"
+            android:exported="false"
+            android:label="@string/title_security_assessment"
+            android:parentActivityName=".ui.MainActivity" />
+
+        <!-- Scam Education Article Detail -->
+        <activity
+            android:name=".ui.education.ArticleDetailActivity"
+            android:exported="false"
+            android:label="@string/title_education"
+            android:parentActivityName=".ui.MainActivity" />
+
+        <!-- System Share Sheet Receiver (ACTION_SEND for text and images) -->
+        <activity
+            android:name=".ui.share.ShareReceiverActivity"
+            android:exported="true"
+            android:label="@string/share_to_scamshield">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>

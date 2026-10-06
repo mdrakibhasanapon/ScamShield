@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- Do not back up user scan history or sensitive inputs to cloud -->
+        <exclude domain="database" path="scamshield.db" />
+        <exclude domain="sharedpref" path="com.scamshield.app_preferences.xml" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="database" path="scamshield.db" />
+    </device-transfer>
+</data-extraction-rules>

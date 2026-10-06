@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Security Colors (Dark Mode Adapted) -->
+    <color name="brand_primary">#60A5FA</color>
+    <color name="brand_primary_variant">#3B82F6</color>
+    <color name="brand_secondary">#2DD4BF</color>
+    <color name="brand_accent">#93C5FD</color>
+
+    <!-- Material 3 Surface and Background (Dark Mode) -->
+    <color name="bg_light">#0F172A</color>
+    <color name="surface_light">#1E293B</color>
+    <color name="surface_variant_light">#334155</color>
+    <color name="text_primary_light">#F8FAFC</color>
+    <color name="text_secondary_light">#CBD5E1</color>
+    <color name="text_tertiary_light">#94A3B8</color>
+    <color name="divider_light">#334155</color>
+
+    <!-- Semantic Color Tokens -->
+    <color name="color_text_primary">#F8FAFC</color>
+    <color name="color_text_secondary">#CBD5E1</color>
+    <color name="color_text_tertiary">#94A3B8</color>
+    <color name="color_input_text">#FFFFFF</color>
+    <color name="color_bg">#0F172A</color>
+    <color name="color_surface">#1E293B</color>
+    <color name="color_surface_variant">#334155</color>
+    <color name="color_divider">#334155</color>
+
+    <!-- Semantic Risk Colors (High contrast for Dark Mode) -->
+    <!-- Low Risk -->
+    <color name="risk_low">#4ADE80</color>
+    <color name="risk_low_bg">#064E3B</color>
+    <color name="risk_low_border">#059669</color>
+
+    <!-- Needs Attention -->
+    <color name="risk_attention">#FBBF24</color>
+    <color name="risk_attention_bg">#451A03</color>
+    <color name="risk_attention_border">#D97706</color>
+
+    <!-- Suspicious -->
+    <color name="risk_suspicious">#FB923C</color>
+    <color name="risk_suspicious_bg">#431407</color>
+    <color name="risk_suspicious_border">#EA580C</color>
+
+    <!-- High Risk -->
+    <color name="risk_high">#F87171</color>
+    <color name="risk_high_bg">#450A0A</color>
+    <color name="risk_high_border">#DC2626</color>
+
+    <!-- Severity Badges -->
+    <color name="severity_critical">#EF4444</color>
+    <color name="severity_warning">#F97316</color>
+    <color name="severity_info">#60A5FA</color>
+
+    <!-- General UI -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+</resources>

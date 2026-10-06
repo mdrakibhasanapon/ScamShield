@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#070D18">
+
+    <!-- Splash Screen Graphic Artwork -->
+    <ImageView
+        android:id="@+id/iv_splash_graphic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_splash_screen"
+        android:contentDescription="ScamShield Splash Graphic" />
+
+    <!-- Subtle Bottom Loading & Security Status -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingBottom="42dp"
+        android:paddingHorizontal="32dp">
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/splash_progress"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:indicatorColor="#38BDF8"
+            app:trackColor="#1E293B"
+            app:trackThickness="3dp"
+            app:trackCornerRadius="2dp" />
+
+        <TextView
+            android:id="@+id/tv_splash_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Initializing local defense engine..."
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.04" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="v1.0.0 • On-Device Security"
+            android:textColor="#475569"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+</FrameLayout>
