@@ -130,6 +130,52 @@
                     android:background="@color/divider_light"
                     android:layout_marginBottom="16dp" />
 
+                <!-- Real-Time Incoming SMS Interceptor Toggle -->
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_sms_shield_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_sms_shield"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary_light" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_sms_shield_desc"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary_light"
+                    android:layout_marginBottom="16dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider_light"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Notify All SMS Toggle -->
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_notify_all_sms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_notify_all_sms"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary_light" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_notify_all_sms_desc"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary_light"
+                    android:layout_marginBottom="16dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider_light"
+                    android:layout_marginBottom="16dp" />
+
                 <!-- Offline Analysis Only Toggle -->
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_offline_only"

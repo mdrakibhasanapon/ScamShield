@@ -18,7 +18,9 @@ public class TextIndicatorDetector {
             "urgent action required", "act now", "immediate action", "limited time",
             "time is running out", "failure to respond will result", "threat of arrest",
             "law enforcement", "warrant for your arrest", "legal consequences",
-            "account is locked", "restricted access", "frozen permanently"
+            "account is locked", "restricted access", "frozen permanently",
+            "temporarily locked", "card is frozen", "card is locked", "account is frozen",
+            "verify immediately", "verify now", "urgent bank alert"
     };
 
     // 2. Financial Demand & Irreversible Payments
@@ -39,7 +41,8 @@ public class TextIndicatorDetector {
     private static final String[] CRYPTO_PATTERNS = {
             "send btc", "send eth", "bitcoin deposit", "crypto wallet", "gas fee to claim",
             "airdrop claim", "12-word seed phrase", "24-word seed phrase", "private key",
-            "secret recovery phrase", "wallet connect", "claim free crypto", "double your bitcoin"
+            "secret recovery phrase", "wallet connect", "claim free crypto", "double your bitcoin",
+            "gas fee", "btc giveaway", "crypto giveaway", "claim payout"
     };
 
     private static final Pattern BTC_ADDRESS_PATTERN = Pattern.compile("\\b(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}\\b");
@@ -49,14 +52,16 @@ public class TextIndicatorDetector {
     private static final String[] CREDENTIAL_PATTERNS = {
             "enter your password", "confirm your pin", "verify your ssn", "social security number",
             "submit your otp", "one-time password", "share your code", "cvv number",
-            "card expiration date", "atm pin", "security questions", "verify your credentials"
+            "card expiration date", "atm pin", "security questions", "verify your credentials",
+            "verify credentials", "verify your account"
     };
 
     // 6. Prize, Lottery & Inheritance Bait
     private static final String[] PRIZE_PATTERNS = {
             "you have won", "lottery winner", "congratulations selected", "inheritance fund",
             "claim your prize", "cash reward", "lucky winner", "unclaimed funds",
-            "grant approved", "free gift card reward", "selected for a grant"
+            "grant approved", "free gift card reward", "selected for a grant",
+            "you have been selected", "selected to win", "giveaway"
     };
 
     // 7. Delivery & Postal Surcharge Fraud

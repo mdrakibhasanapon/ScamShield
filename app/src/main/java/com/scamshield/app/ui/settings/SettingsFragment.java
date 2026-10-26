@@ -25,6 +25,8 @@ public class SettingsFragment extends Fragment {
     private RadioGroup rgTheme;
     private MaterialSwitch switchSaveHistory;
     private MaterialSwitch switchOfflineOnly;
+    private MaterialSwitch switchSmsShield;
+    private MaterialSwitch switchNotifyAllSms;
 
     @Nullable
     @Override
@@ -72,6 +74,19 @@ public class SettingsFragment extends Fragment {
         switchOfflineOnly.setChecked(preferencesManager.isOfflineOnlyEnabled());
         switchOfflineOnly.setOnCheckedChangeListener((buttonView, isChecked) -> {
             preferencesManager.setOfflineOnlyEnabled(isChecked);
+        });
+
+        // Real-Time Incoming SMS Shield Switches
+        switchSmsShield = view.findViewById(R.id.switch_sms_shield_settings);
+        switchSmsShield.setChecked(preferencesManager.isRealTimeSmsShieldEnabled());
+        switchSmsShield.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferencesManager.setRealTimeSmsShieldEnabled(isChecked);
+        });
+
+        switchNotifyAllSms = view.findViewById(R.id.switch_notify_all_sms);
+        switchNotifyAllSms.setChecked(preferencesManager.isNotifyAllSmsEnabled());
+        switchNotifyAllSms.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferencesManager.setNotifyAllSmsEnabled(isChecked);
         });
 
         // Delete All Data Button

@@ -9,6 +9,8 @@ public class PreferencesManager {
     private static final String KEY_SAVE_HISTORY = "pref_save_history";
     private static final String KEY_OFFLINE_ONLY = "pref_offline_only";
     private static final String KEY_FIRST_LAUNCH = "pref_first_launch";
+    private static final String KEY_REALTIME_SMS = "pref_realtime_sms_shield";
+    private static final String KEY_NOTIFY_ALL_SMS = "pref_notify_all_sms";
 
     private final SharedPreferences prefs;
 
@@ -46,6 +48,22 @@ public class PreferencesManager {
 
     public void setFirstLaunchCompleted() {
         prefs.edit().putBoolean(KEY_FIRST_LAUNCH, false).apply();
+    }
+
+    public boolean isRealTimeSmsShieldEnabled() {
+        return prefs.getBoolean(KEY_REALTIME_SMS, true);
+    }
+
+    public void setRealTimeSmsShieldEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_REALTIME_SMS, enabled).apply();
+    }
+
+    public boolean isNotifyAllSmsEnabled() {
+        return prefs.getBoolean(KEY_NOTIFY_ALL_SMS, false);
+    }
+
+    public void setNotifyAllSmsEnabled(boolean notifyAll) {
+        prefs.edit().putBoolean(KEY_NOTIFY_ALL_SMS, notifyAll).apply();
     }
 
     public void clearAllPreferences() {

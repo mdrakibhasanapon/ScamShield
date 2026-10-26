@@ -45,6 +45,93 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Real-Time SMS Watchdog Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_sms_watchdog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/brand_primary"
+            app:cardBackgroundColor="@color/surface_variant_light">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_shield_check"
+                        app:tint="@color/brand_primary"
+                        android:contentDescription="@null" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/sms_shield_title"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_primary_light" />
+
+                        <TextView
+                            android:id="@+id/tv_sms_shield_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/sms_shield_status_active"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/risk_low" />
+                    </LinearLayout>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/switch_sms_shield"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/sms_shield_desc"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="2dp"
+                    android:textColor="@color/text_secondary_light" />
+
+                <!-- Action Simulation Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_simulate_sms"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/sms_shield_btn_simulate"
+                    android:textSize="13sp"
+                    app:icon="@drawable/ic_action_message"
+                    app:iconSize="18dp" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
         <!-- Section: What would you like to check? -->
         <TextView
             android:layout_width="match_parent"

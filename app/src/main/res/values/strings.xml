@@ -158,7 +158,7 @@
     <string name="settings_terms">Terms of Service</string>
     <string name="settings_version">Version %1$s (Production)</string>
     <string name="privacy_dialog_title">What happens to your data?</string>
-    <string name="privacy_dialog_content">ScamShield is engineered with strict Data Minimization:\n\n• No Background Access: We never read your SMS, contacts, notifications, or call logs.\n• User-Initiated: Only content you explicitly submit is analyzed.\n• Local-First: Heuristics run directly on your device.\n• No Message Retention: Content is never stored on servers or used for model training.\n• Full Control: You can disable history and erase all data anytime with one tap.</string>
+    <string name="privacy_dialog_content">ScamShield is engineered with strict Data Minimization:\n\n• On-Device SMS Watchdog: Incoming SMS screening runs 100% locally on your device to flag phishing before you click. Zero SMS content or phone numbers are ever uploaded or shared.\n• Manual Analysis: Only content you paste or scan is analyzed.\n• Local-First: Heuristics run directly on your phone.\n• No Remote Retention: Content is never stored on servers or used for AI training.\n• Full Control: You can pause real-time screening, clear history, or erase all local data anytime.</string>
 
     <!-- Education Articles -->
     <string name="title_education">Scam Prevention Guides</string>
@@ -177,6 +177,21 @@
     <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
     <string name="admob_banner_ad_unit_id">ca-app-pub-3940256099942544/9214589741</string>
     <string name="admob_rewarded_ad_unit_id">ca-app-pub-3940256099942544/5224354917</string>
+
+    <!-- Real-Time Incoming SMS Watchdog & Simulation -->
+    <string name="sms_shield_title">Real-Time SMS Watchdog</string>
+    <string name="sms_shield_desc">Screens incoming SMS messages automatically on-device. Flags suspicious links and phishing attempts before you click.</string>
+    <string name="sms_shield_status_active">Protection Active</string>
+    <string name="sms_shield_status_inactive">Protection Paused</string>
+    <string name="sms_shield_status_permission_needed">Permission Required</string>
+    <string name="sms_shield_btn_simulate">🧪 Test Incoming Scam SMS</string>
+    <string name="sms_shield_dialog_title">Enable SMS Threat Watchdog?</string>
+    <string name="sms_shield_dialog_msg">ScamShield screens incoming messages directly on your device using heuristic algorithms. Zero SMS text or contact details are ever uploaded to external servers.</string>
+    <string name="sms_permission_grant">Grant Permission</string>
+    <string name="settings_sms_shield">Incoming SMS Watchdog</string>
+    <string name="settings_sms_shield_desc">Automatically score incoming SMS messages on-device</string>
+    <string name="settings_notify_all_sms">Alert for Safe Messages</string>
+    <string name="settings_notify_all_sms_desc">Show low-priority notifications for verified clean SMS (score ≤ 20)</string>
 
     <!-- Ad UI Strings -->
     <string name="btn_rewarded_ai_scan">⚡ Watch Ad for Deep AI Cloud Analysis</string>

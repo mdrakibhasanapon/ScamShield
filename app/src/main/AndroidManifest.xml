@@ -2,9 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Privacy-respecting minimal permissions. No SMS/Call/Contacts access. -->
+    <!-- Network access for optional AI and AdMob -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
+    <!-- Real-Time Incoming SMS Interception & Scoring -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+
+    <!-- Android 13+ Notification Alerts for Detected Threats -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     
     <!-- Camera is strictly optional for QR code scanning & screenshot capture -->
     <uses-feature
@@ -102,6 +108,16 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
+
+        <!-- Real-Time Incoming SMS Interception & Scoring Receiver -->
+        <receiver
+            android:name=".receiver.SmsReceiver"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter android:priority="999">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 
