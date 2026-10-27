@@ -59,7 +59,7 @@ public class PreferencesManager {
     }
 
     public boolean isNotifyAllSmsEnabled() {
-        return prefs.getBoolean(KEY_NOTIFY_ALL_SMS, false);
+        return prefs.getBoolean(KEY_NOTIFY_ALL_SMS, true);
     }
 
     public void setNotifyAllSmsEnabled(boolean notifyAll) {

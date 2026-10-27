@@ -1,10 +1,15 @@
 package com.scamshield.app.ui.home;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import com.scamshield.app.R;
 import com.scamshield.app.data.local.PreferencesManager;
@@ -35,6 +41,7 @@ import com.scamshield.app.ui.qr.QrScanActivity;
 import com.scamshield.app.ui.result.ResultActivity;
 import com.scamshield.app.ui.screenshot.ScreenshotAnalysisActivity;
 import com.scamshield.app.ui.url.CheckUrlActivity;
+import com.scamshield.app.util.SmsInboxHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,9 +58,23 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
     // SMS Watchdog UI
     private MaterialSwitch switchSmsShield;
     private TextView tvSmsShieldStatus;
+    private View layoutPermissionWarning;
+    private MaterialButton btnGrantPermissions;
+    private MaterialButton btnOpenAppSettings;
+    private MaterialButton btnScanInboxSms;
     private MaterialButton btnSimulateSms;
+    private TextView tvSmsTroubleshoot;
 
     private ActivityResultLauncher<String[]> smsPermissionLauncher;
+
+    // Real-time broadcast receiver to catch incoming SMS updates while viewing Home
+    private final BroadcastReceiver smsProcessedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            loadRecentScans();
+            updateSmsShieldUI();
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,9 +83,10 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
                 new ActivityResultContracts.RequestMultiplePermissions(),
                 result -> {
                     updateSmsShieldUI();
-                    Boolean smsGranted = result.get(Manifest.permission.RECEIVE_SMS);
-                    if (smsGranted != null && smsGranted) {
-                        Toast.makeText(requireContext(), "Real-Time SMS Watchdog activated!", Toast.LENGTH_SHORT).show();
+                    boolean smsGranted = Boolean.TRUE.equals(result.get(Manifest.permission.RECEIVE_SMS)) ||
+                                         Boolean.TRUE.equals(result.get(Manifest.permission.READ_SMS));
+                    if (smsGranted) {
+                        Toast.makeText(requireContext(), "SMS Watchdog is now fully active!", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -88,7 +110,12 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
         // SMS Watchdog Setup
         switchSmsShield = view.findViewById(R.id.switch_sms_shield);
         tvSmsShieldStatus = view.findViewById(R.id.tv_sms_shield_status);
+        layoutPermissionWarning = view.findViewById(R.id.layout_permission_warning);
+        btnGrantPermissions = view.findViewById(R.id.btn_grant_permissions);
+        btnOpenAppSettings = view.findViewById(R.id.btn_open_app_settings);
+        btnScanInboxSms = view.findViewById(R.id.btn_scan_inbox_sms);
         btnSimulateSms = view.findViewById(R.id.btn_simulate_sms);
+        tvSmsTroubleshoot = view.findViewById(R.id.tv_sms_troubleshoot);
 
         switchSmsShield.setOnCheckedChangeListener((buttonView, isChecked) -> {
             preferencesManager.setRealTimeSmsShieldEnabled(isChecked);
@@ -98,7 +125,15 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
             updateSmsShieldUI();
         });
 
+        btnGrantPermissions.setOnClickListener(v -> checkAndRequestSmsPermissions());
+
+        btnOpenAppSettings.setOnClickListener(v -> openAppSettings());
+
+        btnScanInboxSms.setOnClickListener(v -> handleScanInbox());
+
         btnSimulateSms.setOnClickListener(v -> showSimulationDialog());
+
+        tvSmsTroubleshoot.setOnClickListener(v -> showTroubleshootDialog());
 
         // Action Buttons Setup
         view.findViewById(R.id.card_action_message).setOnClickListener(v -> {
@@ -125,32 +160,61 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
         super.onResume();
         loadRecentScans();
         updateSmsShieldUI();
+
+        // Register receiver for real-time background SMS updates
+        try {
+            IntentFilter filter = new IntentFilter(SmsReceiver.ACTION_SMS_PROCESSED);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                requireContext().registerReceiver(smsProcessedReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+            } else {
+                requireContext().registerReceiver(smsProcessedReceiver, filter);
+            }
+        } catch (Exception ignored) {}
     }
 
-    private void updateSmsShieldUI() {
+    @Override
+    public void onPause() {
+        super.onPause();
+        try {
+            requireContext().unregisterReceiver(smsProcessedReceiver);
+        } catch (Exception ignored) {}
+    }
+
+    public void updateSmsShieldUI() {
         if (!isAdded()) return;
 
         boolean isEnabled = preferencesManager.isRealTimeSmsShieldEnabled();
         switchSmsShield.setChecked(isEnabled);
 
-        boolean hasSmsPerm = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
+        boolean hasReceiveSms = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
+        boolean hasReadSms = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED;
+        boolean hasNotif = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
+
+        boolean allGranted = hasReceiveSms && hasReadSms && hasNotif;
 
         if (!isEnabled) {
             tvSmsShieldStatus.setText(R.string.sms_shield_status_inactive);
             tvSmsShieldStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_tertiary_light));
-        } else if (!hasSmsPerm) {
+            layoutPermissionWarning.setVisibility(View.GONE);
+        } else if (!allGranted) {
             tvSmsShieldStatus.setText(R.string.sms_shield_status_permission_needed);
             tvSmsShieldStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.risk_suspicious));
+            layoutPermissionWarning.setVisibility(View.VISIBLE);
         } else {
             tvSmsShieldStatus.setText(R.string.sms_shield_status_active);
             tvSmsShieldStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.risk_low));
+            layoutPermissionWarning.setVisibility(View.GONE);
         }
     }
 
-    private void checkAndRequestSmsPermissions() {
+    public void checkAndRequestSmsPermissions() {
         List<String> permissions = new ArrayList<>();
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.RECEIVE_SMS);
+        }
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.READ_SMS);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -161,6 +225,42 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
         if (!permissions.isEmpty()) {
             smsPermissionLauncher.launch(permissions.toArray(new String[0]));
         }
+    }
+
+    private void openAppSettings() {
+        try {
+            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.setData(Uri.fromParts("package", requireContext().getPackageName(), null));
+            startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), "Open Settings > Apps > ScamShield > Permissions", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void handleScanInbox() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(requireContext(), "Grant SMS permission to scan device inbox", Toast.LENGTH_SHORT).show();
+            checkAndRequestSmsPermissions();
+            return;
+        }
+
+        List<ScamAnalysisResult> scanned = SmsInboxHelper.scanRecentInbox(requireContext(), 15);
+        if (scanned.isEmpty()) {
+            Toast.makeText(requireContext(), "No SMS messages found in device inbox, or permission needed.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(requireContext(), "Scanned " + scanned.size() + " inbox messages! Scores updated.", Toast.LENGTH_LONG).show();
+            loadRecentScans();
+        }
+    }
+
+    private void showTroubleshootDialog() {
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.troubleshoot_dialog_title)
+                .setMessage(R.string.troubleshoot_dialog_content)
+                .setIcon(R.drawable.ic_shield_check)
+                .setPositiveButton("Open App Settings", (dialog, which) -> openAppSettings())
+                .setNegativeButton("Got It", null)
+                .show();
     }
 
     private void showSimulationDialog() {
@@ -215,7 +315,7 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
 
     private void loadRecentScans() {
         recentScansList.clear();
-        List<ScanHistoryItem> items = historyRepository.getRecentScans(5);
+        List<ScanHistoryItem> items = historyRepository.getRecentScans(10);
         if (items.isEmpty()) {
             layoutEmptyScans.setVisibility(View.VISIBLE);
             rvRecentScans.setVisibility(View.GONE);

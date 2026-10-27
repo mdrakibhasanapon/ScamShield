@@ -1,11 +1,17 @@
 package com.scamshield.app.ui;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -17,9 +23,13 @@ import com.scamshield.app.ui.history.HistoryFragment;
 import com.scamshield.app.ui.home.HomeFragment;
 import com.scamshield.app.ui.settings.SettingsFragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private PreferencesManager preferencesManager;
+    private ActivityResultLauncher<String[]> mainPermissionLauncher;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,6 +38,16 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mainPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestMultiplePermissions(),
+                result -> {
+                    Fragment current = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                    if (current instanceof HomeFragment) {
+                        ((HomeFragment) current).updateSmsShieldUI();
+                    }
+                }
+        );
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnItemSelectedListener(item -> {
@@ -65,6 +85,49 @@ public class MainActivity extends AppCompatActivity {
                 showExitConfirmationDialog();
             }
         });
+
+        // Prompt user to grant SMS & Notification permissions if needed
+        checkAndPromptSmsPermissions();
+    }
+
+    private void checkAndPromptSmsPermissions() {
+        if (!preferencesManager.isRealTimeSmsShieldEnabled()) return;
+
+        boolean hasReceiveSms = ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
+        boolean hasReadSms = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED;
+        boolean hasNotif = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
+
+        if (!hasReceiveSms || !hasReadSms || !hasNotif) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.sms_shield_dialog_title)
+                    .setMessage(R.string.sms_shield_dialog_msg)
+                    .setIcon(R.drawable.ic_shield_check)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.sms_permission_grant, (dialog, which) -> {
+                        requestSmsPermissions();
+                    })
+                    .setNegativeButton(R.string.btn_dismiss, (dialog, which) -> dialog.dismiss())
+                    .show();
+        }
+    }
+
+    public void requestSmsPermissions() {
+        List<String> needed = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
+            needed.add(Manifest.permission.RECEIVE_SMS);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+            needed.add(Manifest.permission.READ_SMS);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            needed.add(Manifest.permission.POST_NOTIFICATIONS);
+        }
+
+        if (!needed.isEmpty()) {
+            mainPermissionLauncher.launch(needed.toArray(new String[0]));
+        }
     }
 
     private void showExitConfirmationDialog() {

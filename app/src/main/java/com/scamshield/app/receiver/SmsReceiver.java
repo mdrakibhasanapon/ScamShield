@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.util.Log;
@@ -26,8 +27,9 @@ import java.util.Map;
  */
 public class SmsReceiver extends BroadcastReceiver {
 
-    private static final String TAG = "SmsReceiver";
+    private static final String TAG = "ScamShield_SMS";
     public static final String ACTION_SIMULATE_SMS = "com.scamshield.app.SIMULATE_SMS";
+    public static final String ACTION_SMS_PROCESSED = "com.scamshield.app.SMS_PROCESSED";
     public static final String EXTRA_SIMULATED_SENDER = "extra_simulated_sender";
     public static final String EXTRA_SIMULATED_BODY = "extra_simulated_body";
 
@@ -42,6 +44,7 @@ public class SmsReceiver extends BroadcastReceiver {
         }
 
         String action = intent.getAction();
+        Log.d(TAG, "SmsReceiver received action: " + action);
 
         // Handle simulation intent for testing
         if (ACTION_SIMULATE_SMS.equals(action)) {
@@ -57,7 +60,32 @@ public class SmsReceiver extends BroadcastReceiver {
         if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(action)) {
             try {
                 SmsMessage[] messages = Telephony.Sms.Intents.getMessagesFromIntent(intent);
-                if (messages == null || messages.length == 0) return;
+
+                // Fallback to manual PDU extraction if getMessagesFromIntent returns empty
+                if (messages == null || messages.length == 0) {
+                    Bundle bundle = intent.getExtras();
+                    if (bundle != null && bundle.containsKey("pdus")) {
+                        Object[] pdus = (Object[]) bundle.get("pdus");
+                        String format = bundle.getString("format");
+                        if (pdus != null && pdus.length > 0) {
+                            messages = new SmsMessage[pdus.length];
+                            for (int i = 0; i < pdus.length; i++) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i], format);
+                                } else {
+                                    messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (messages == null || messages.length == 0) {
+                    Log.w(TAG, "No SMS messages could be extracted from intent.");
+                    return;
+                }
+
+                Log.d(TAG, "Successfully extracted " + messages.length + " message parts.");
 
                 // Multi-part SMS messages can arrive in chunks; assemble per originating address
                 Map<String, StringBuilder> assembledMessages = new LinkedHashMap<>();
@@ -118,6 +146,13 @@ public class SmsReceiver extends BroadcastReceiver {
 
             // 3. Dispatch notification with threat score and risk breakdown
             NotificationHelper.showSmsScanNotification(context, sender, messageBody, result);
+
+            // 4. Send local broadcast to refresh UI if app is open
+            try {
+                Intent updateIntent = new Intent(ACTION_SMS_PROCESSED);
+                updateIntent.setPackage(context.getPackageName());
+                context.sendBroadcast(updateIntent);
+            } catch (Exception ignored) {}
 
             Log.i(TAG, "Processed incoming SMS from [" + sender + "] with Risk Score: " 
                     + result.getRiskScore() + "/100 (" + result.getRiskLevel().getTitle() + ")");

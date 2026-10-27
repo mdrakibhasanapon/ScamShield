@@ -117,17 +117,107 @@
                     android:lineSpacingExtra="2dp"
                     android:textColor="@color/text_secondary_light" />
 
-                <!-- Action Simulation Button -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_simulate_sms"
-                    style="@style/Widget.Material3.Button.TonalButton"
+                <!-- Permission Warning Banner (Visible if permissions are missing) -->
+                <LinearLayout
+                    android:id="@+id/layout_permission_warning"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     android:layout_marginTop="12dp"
-                    android:text="@string/sms_shield_btn_simulate"
-                    android:textSize="13sp"
-                    app:icon="@drawable/ic_action_message"
-                    app:iconSize="18dp" />
+                    android:padding="12dp"
+                    android:background="@color/risk_suspicious_bg"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_permission_warning_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="⚠️ SMS Permissions Required"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/risk_high" />
+
+                    <TextView
+                        android:id="@+id/tv_permission_warning_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Allow SMS permissions so ScamShield can automatically screen and score incoming text messages on-device."
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary_light" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_grant_permissions"
+                            style="@style/Widget.Material3.Button"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Grant Permissions"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="4dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_open_app_settings"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="App Settings"
+                            android:textSize="12sp"
+                            android:layout_marginStart="4dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Actions: Scan Inbox & Test Simulator -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_scan_inbox_sms"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/sms_shield_btn_scan_inbox"
+                        android:textSize="12sp"
+                        android:layout_marginEnd="4dp"
+                        app:icon="@drawable/ic_action_message"
+                        app:iconSize="16dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_simulate_sms"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/sms_shield_btn_simulate"
+                        android:textSize="12sp"
+                        android:layout_marginStart="4dp"
+                        app:icon="@drawable/ic_shield_check"
+                        app:iconSize="16dp" />
+                </LinearLayout>
+
+                <!-- Device Troubleshooting Link -->
+                <TextView
+                    android:id="@+id/tv_sms_troubleshoot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="@string/sms_shield_troubleshoot_link"
+                    android:textSize="12sp"
+                    android:textColor="@color/brand_primary"
+                    android:clickable="true"
+                    android:focusable="true" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

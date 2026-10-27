@@ -184,14 +184,19 @@
     <string name="sms_shield_status_active">Protection Active</string>
     <string name="sms_shield_status_inactive">Protection Paused</string>
     <string name="sms_shield_status_permission_needed">Permission Required</string>
-    <string name="sms_shield_btn_simulate">🧪 Test Incoming Scam SMS</string>
+    <string name="sms_shield_btn_simulate">🧪 Test Scam Alert</string>
+    <string name="sms_shield_btn_scan_inbox">📥 Scan Device Inbox</string>
+    <string name="sms_shield_troubleshoot_link">SMS not arriving? Tap for device help</string>
     <string name="sms_shield_dialog_title">Enable SMS Threat Watchdog?</string>
     <string name="sms_shield_dialog_msg">ScamShield screens incoming messages directly on your device using heuristic algorithms. Zero SMS text or contact details are ever uploaded to external servers.</string>
     <string name="sms_permission_grant">Grant Permission</string>
+    <string name="btn_dismiss">Maybe Later</string>
     <string name="settings_sms_shield">Incoming SMS Watchdog</string>
     <string name="settings_sms_shield_desc">Automatically score incoming SMS messages on-device</string>
     <string name="settings_notify_all_sms">Alert for Safe Messages</string>
-    <string name="settings_notify_all_sms_desc">Show low-priority notifications for verified clean SMS (score ≤ 20)</string>
+    <string name="settings_notify_all_sms_desc">Show notifications with scores for clean SMS (score ≤ 20)</string>
+    <string name="troubleshoot_dialog_title">SMS Delivery Troubleshooting</string>
+    <string name="troubleshoot_dialog_content">If SMS messages are not automatically appearing in ScamShield, check these 4 common device settings:\n\n1. SMS Permission: Open App Settings and verify SMS permissions are set to \"Allow\".\n\n2. Notification Permission: On Android 13+, Notifications must be allowed so ScamShield can alert you.\n\n3. Battery Optimization (Xiaomi/Samsung/Oppo/Vivo): Aggressive battery savers kill background apps. Set Battery to \"Unrestricted\" and enable \"Autostart\" (Xiaomi/MIUI/HyperOS).\n\n4. RCS / Chat Features in Google Messages: Messages sent via RCS (Chat features) are transmitted via Google cloud data rather than cellular SMS. Use the \"📥 Scan Device Inbox\" button anytime to score all stored SMS messages!</string>
 
     <!-- Ad UI Strings -->
     <string name="btn_rewarded_ai_scan">⚡ Watch Ad for Deep AI Cloud Analysis</string>

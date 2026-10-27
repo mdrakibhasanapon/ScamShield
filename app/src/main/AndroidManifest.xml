@@ -8,6 +8,7 @@
     
     <!-- Real-Time Incoming SMS Interception & Scoring -->
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <!-- Android 13+ Notification Alerts for Detected Threats -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -112,8 +113,7 @@
         <!-- Real-Time Incoming SMS Interception & Scoring Receiver -->
         <receiver
             android:name=".receiver.SmsReceiver"
-            android:exported="true"
-            android:permission="android.permission.BROADCAST_SMS">
+            android:exported="true">
             <intent-filter android:priority="999">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
