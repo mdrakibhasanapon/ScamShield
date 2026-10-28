@@ -34,6 +34,7 @@ import com.scamshield.app.data.local.PreferencesManager;
 import com.scamshield.app.data.model.ScanHistoryItem;
 import com.scamshield.app.data.model.ScamAnalysisResult;
 import com.scamshield.app.data.repository.HistoryRepository;
+import com.scamshield.app.receiver.DownloadReceiver;
 import com.scamshield.app.receiver.SmsReceiver;
 import com.scamshield.app.ui.history.HistoryAdapter;
 import com.scamshield.app.ui.message.CheckMessageActivity;
@@ -65,17 +66,23 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
     private MaterialButton btnSimulateSms;
     private TextView tvSmsTroubleshoot;
 
+    // Real-Time Download Watchdog UI
+    private MaterialSwitch switchDownloadShield;
+    private TextView tvDownloadShieldStatus;
+    private MaterialButton btnSimulateDownload;
+
     // Full Phone Device Security Scan UI
     private TextView tvDeviceScanStatus;
 
     private ActivityResultLauncher<String[]> smsPermissionLauncher;
 
-    // Real-time broadcast receiver to catch incoming SMS updates while viewing Home
-    private final BroadcastReceiver smsProcessedReceiver = new BroadcastReceiver() {
+    // Real-time broadcast receiver to catch incoming SMS or download updates while viewing Home
+    private final BroadcastReceiver realTimeUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             loadRecentScans();
             updateSmsShieldUI();
+            updateDownloadShieldUI();
         }
     };
 
@@ -129,14 +136,22 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
         });
 
         btnGrantPermissions.setOnClickListener(v -> checkAndRequestSmsPermissions());
-
         btnOpenAppSettings.setOnClickListener(v -> openAppSettings());
-
         btnScanInboxSms.setOnClickListener(v -> handleScanInbox());
-
         btnSimulateSms.setOnClickListener(v -> showSimulationDialog());
-
         tvSmsTroubleshoot.setOnClickListener(v -> showTroubleshootDialog());
+
+        // Download Watchdog Setup
+        switchDownloadShield = view.findViewById(R.id.switch_download_shield);
+        tvDownloadShieldStatus = view.findViewById(R.id.tv_download_shield_status);
+        btnSimulateDownload = view.findViewById(R.id.btn_simulate_download);
+
+        switchDownloadShield.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferencesManager.setDownloadWatchdogEnabled(isChecked);
+            updateDownloadShieldUI();
+        });
+
+        btnSimulateDownload.setOnClickListener(v -> showDownloadSimulationDialog());
 
         // Full Phone Device Security Scan Setup
         tvDeviceScanStatus = view.findViewById(R.id.tv_device_scan_status);
@@ -172,15 +187,18 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
         super.onResume();
         loadRecentScans();
         updateSmsShieldUI();
+        updateDownloadShieldUI();
         updateDeviceScanStatusUI();
 
-        // Register receiver for real-time background SMS updates
+        // Register receiver for real-time background SMS and download updates
         try {
-            IntentFilter filter = new IntentFilter(SmsReceiver.ACTION_SMS_PROCESSED);
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(SmsReceiver.ACTION_SMS_PROCESSED);
+            filter.addAction(DownloadReceiver.ACTION_DOWNLOAD_SCANNED);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                requireContext().registerReceiver(smsProcessedReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+                requireContext().registerReceiver(realTimeUpdateReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
             } else {
-                requireContext().registerReceiver(smsProcessedReceiver, filter);
+                requireContext().registerReceiver(realTimeUpdateReceiver, filter);
             }
         } catch (Exception ignored) {}
     }
@@ -189,7 +207,7 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
     public void onPause() {
         super.onPause();
         try {
-            requireContext().unregisterReceiver(smsProcessedReceiver);
+            requireContext().unregisterReceiver(realTimeUpdateReceiver);
         } catch (Exception ignored) {}
     }
 
@@ -218,6 +236,19 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
             tvSmsShieldStatus.setText(R.string.sms_shield_status_active);
             tvSmsShieldStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.risk_low));
             layoutPermissionWarning.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateDownloadShieldUI() {
+        if (!isAdded() || tvDownloadShieldStatus == null) return;
+        boolean isEnabled = preferencesManager.isDownloadWatchdogEnabled();
+        switchDownloadShield.setChecked(isEnabled);
+        if (isEnabled) {
+            tvDownloadShieldStatus.setText(R.string.download_shield_status_active);
+            tvDownloadShieldStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.risk_low));
+        } else {
+            tvDownloadShieldStatus.setText(R.string.download_shield_status_inactive);
+            tvDownloadShieldStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_tertiary_light));
         }
     }
 
@@ -332,6 +363,59 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
                     loadRecentScans();
 
                     // Offer to view assessment right away
+                    if (result != null) {
+                        Intent intent = new Intent(requireContext(), ResultActivity.class);
+                        intent.putExtra(ResultActivity.EXTRA_RESULT, result);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void showDownloadSimulationDialog() {
+        String[] downloadScenarios = {
+                "🚨 Disguised Malware (invoice_payment.pdf.apk - Score: 95/100)",
+                "⚠️ Sideloaded Banking APK (chase_update.apk - Score: 85/100)",
+                "🔍 Executable Script File (device_root.sh - Score: 75/100)",
+                "✓ Clean PDF Document (quarterly_statement.pdf - Score: 0/100)"
+        };
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Simulate Download & Notification Alert")
+                .setItems(downloadScenarios, (dialog, which) -> {
+                    String fileName;
+                    String fakePath;
+                    String originUrl;
+
+                    switch (which) {
+                        case 0:
+                            fileName = "invoice_payment.pdf.apk";
+                            fakePath = "/sdcard/Download/invoice_payment.pdf.apk";
+                            originUrl = "http://secure-billing-update.icu/dl/invoice_payment.pdf.apk";
+                            break;
+                        case 1:
+                            fileName = "chase_security_update.apk";
+                            fakePath = "/sdcard/Download/chase_security_update.apk";
+                            originUrl = "http://chase-security-verify.top/chase_security_update.apk";
+                            break;
+                        case 2:
+                            fileName = "device_root.sh";
+                            fakePath = "/sdcard/Download/device_root.sh";
+                            originUrl = "https://unverified-scripts.xyz/scripts/device_root.sh";
+                            break;
+                        default:
+                            fileName = "quarterly_statement.pdf";
+                            fakePath = "/sdcard/Download/quarterly_statement.pdf";
+                            originUrl = "https://chase.com/statements/quarterly_statement.pdf";
+                            break;
+                    }
+
+                    ScamAnalysisResult result = DownloadReceiver.processDownload(requireContext(), fileName, fakePath, originUrl);
+
+                    Toast.makeText(requireContext(), "Download scan alert sent! Check your notification bar.", Toast.LENGTH_LONG).show();
+                    loadRecentScans();
+
                     if (result != null) {
                         Intent intent = new Intent(requireContext(), ResultActivity.class);
                         intent.putExtra(ResultActivity.EXTRA_RESULT, result);

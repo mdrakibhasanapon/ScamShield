@@ -66,6 +66,25 @@ public class PreferencesManager {
         prefs.edit().putBoolean(KEY_NOTIFY_ALL_SMS, notifyAll).apply();
     }
 
+    public static final String KEY_DOWNLOAD_WATCHDOG = "download_watchdog_enabled";
+    public static final String KEY_NOTIFY_CLEAN_DOWNLOADS = "notify_clean_downloads";
+
+    public boolean isDownloadWatchdogEnabled() {
+        return prefs.getBoolean(KEY_DOWNLOAD_WATCHDOG, true);
+    }
+
+    public void setDownloadWatchdogEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_DOWNLOAD_WATCHDOG, enabled).apply();
+    }
+
+    public boolean isNotifyCleanDownloadsEnabled() {
+        return prefs.getBoolean(KEY_NOTIFY_CLEAN_DOWNLOADS, true);
+    }
+
+    public void setNotifyCleanDownloadsEnabled(boolean notifyClean) {
+        prefs.edit().putBoolean(KEY_NOTIFY_CLEAN_DOWNLOADS, notifyClean).apply();
+    }
+
     public static final String KEY_LAST_DEVICE_SCAN_TIME = "last_device_scan_time";
     public static final String KEY_LAST_DEVICE_SCORE = "last_device_score";
     public static final String KEY_LAST_DEVICE_THREAT_COUNT = "last_device_threat_count";

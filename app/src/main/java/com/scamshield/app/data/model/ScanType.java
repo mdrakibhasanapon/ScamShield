@@ -4,7 +4,8 @@ public enum ScanType {
     MESSAGE("Message / SMS / Email"),
     URL("Link / URL"),
     SCREENSHOT("Screenshot OCR"),
-    QR_CODE("QR Code");
+    QR_CODE("QR Code"),
+    FILE_DOWNLOAD("Downloaded File / APK");
 
     private final String label;
 

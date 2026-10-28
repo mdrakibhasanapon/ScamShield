@@ -27,6 +27,8 @@ public class SettingsFragment extends Fragment {
     private MaterialSwitch switchOfflineOnly;
     private MaterialSwitch switchSmsShield;
     private MaterialSwitch switchNotifyAllSms;
+    private MaterialSwitch switchDownloadShield;
+    private MaterialSwitch switchNotifyCleanDownloads;
 
     @Nullable
     @Override
@@ -87,6 +89,19 @@ public class SettingsFragment extends Fragment {
         switchNotifyAllSms.setChecked(preferencesManager.isNotifyAllSmsEnabled());
         switchNotifyAllSms.setOnCheckedChangeListener((buttonView, isChecked) -> {
             preferencesManager.setNotifyAllSmsEnabled(isChecked);
+        });
+
+        // Real-Time Download Watchdog Switches
+        switchDownloadShield = view.findViewById(R.id.switch_download_shield_settings);
+        switchDownloadShield.setChecked(preferencesManager.isDownloadWatchdogEnabled());
+        switchDownloadShield.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferencesManager.setDownloadWatchdogEnabled(isChecked);
+        });
+
+        switchNotifyCleanDownloads = view.findViewById(R.id.switch_notify_clean_downloads);
+        switchNotifyCleanDownloads.setChecked(preferencesManager.isNotifyCleanDownloadsEnabled());
+        switchNotifyCleanDownloads.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferencesManager.setNotifyCleanDownloadsEnabled(isChecked);
         });
 
         // Delete All Data Button

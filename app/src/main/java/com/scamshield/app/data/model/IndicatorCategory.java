@@ -8,7 +8,8 @@ public enum IndicatorCategory {
     URL_ANOMALY("Link & Domain Anomalies"),
     PRIZE_BAIT("Unsolicited Prize / Lottery"),
     DELIVERY_SCAM("Parcel & Delivery Fraud"),
-    SOCIAL_ENGINEERING("Social Engineering Patterns");
+    SOCIAL_ENGINEERING("Social Engineering Patterns"),
+    MALICIOUS_DOWNLOAD("Malicious File & Download");
 
     private final String displayName;
 

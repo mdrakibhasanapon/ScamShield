@@ -210,6 +210,17 @@
     <string name="home_device_scan_status_threats">⚠️ %1$d Threats Detected (Score: %2$d/100)</string>
     <string name="home_device_scan_status_never">Ready to scan (Tap to start)</string>
 
+    <!-- Real-Time Download Watchdog & Threat Alerts -->
+    <string name="download_shield_title">Download Threat Watchdog</string>
+    <string name="download_shield_desc">Automatically scans downloaded files, APK packages, and scripts. Sends instant notification alerts if malware or disguised files are detected.</string>
+    <string name="download_shield_status_active">Download Shield Active</string>
+    <string name="download_shield_status_inactive">Download Shield Paused</string>
+    <string name="download_shield_btn_simulate">🧪 Test Download Alert</string>
+    <string name="settings_download_shield">Download Threat Watchdog</string>
+    <string name="settings_download_shield_desc">Automatically scan web and browser downloads on-device</string>
+    <string name="settings_notify_clean_downloads">Alert for Safe Downloads</string>
+    <string name="settings_notify_clean_downloads_desc">Show low-priority confirmation for verified clean downloads (score 0/100)</string>
+
     <!-- Ad UI Strings -->
     <string name="btn_rewarded_ai_scan">⚡ Watch Ad for Deep AI Cloud Analysis</string>
     <string name="rewarded_ad_loading">Loading sponsor video…</string>

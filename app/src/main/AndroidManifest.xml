@@ -131,6 +131,24 @@
             </intent-filter>
         </receiver>
 
+        <!-- Real-Time Download Watchdog Receiver -->
+        <receiver
+            android:name=".receiver.DownloadReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Notification Action Receiver for One-Tap File Deletion -->
+        <receiver
+            android:name=".receiver.DeleteDownloadReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.scamshield.app.ACTION_DELETE_DOWNLOAD" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
