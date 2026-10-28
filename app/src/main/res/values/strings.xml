@@ -22,6 +22,7 @@
     <string name="home_empty_scans_sub">Submit a message, link, or image to start protecting yourself.</string>
     <string name="home_security_tip_title">Daily Security Tip</string>
     <string name="home_security_tip_content">Legitimate institutions will never pressure you to transfer funds or purchase gift cards to resolve an account issue.</string>
+    <string name="home_section_protection">Real-Time Protection &amp; Scanner</string>
 
     <!-- Navigation -->
     <string name="nav_home">Home</string>
