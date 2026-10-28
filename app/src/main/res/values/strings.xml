@@ -198,6 +198,18 @@
     <string name="troubleshoot_dialog_title">SMS Delivery Troubleshooting</string>
     <string name="troubleshoot_dialog_content">If SMS messages are not automatically appearing in ScamShield, check these 4 common device settings:\n\n1. SMS Permission: Open App Settings and verify SMS permissions are set to \"Allow\".\n\n2. Notification Permission: On Android 13+, Notifications must be allowed so ScamShield can alert you.\n\n3. Battery Optimization (Xiaomi/Samsung/Oppo/Vivo): Aggressive battery savers kill background apps. Set Battery to \"Unrestricted\" and enable \"Autostart\" (Xiaomi/MIUI/HyperOS).\n\n4. RCS / Chat Features in Google Messages: Messages sent via RCS (Chat features) are transmitted via Google cloud data rather than cellular SMS. Use the \"📥 Scan Device Inbox\" button anytime to score all stored SMS messages!</string>
 
+    <!-- Full Phone Device Security & Malware Scan -->
+    <string name="title_device_scan">Full Phone Security Scan</string>
+    <string name="btn_rescan_device">Re-scan Whole Device</string>
+    <string name="home_action_device_scan">Scan Whole Phone</string>
+    <string name="home_action_device_scan_desc">Audit apps, loose APKs &amp; root</string>
+    <string name="home_device_scan_title">Full Phone Malware &amp; Threat Scan</string>
+    <string name="home_device_scan_desc">Audit installed apps for trojan permissions, inspect downloaded APKs, and check system integrity on-device.</string>
+    <string name="home_device_scan_btn">🛡️ Scan Whole Phone Now</string>
+    <string name="home_device_scan_status_clean">Device Clean (Health Score: %1$d/100)</string>
+    <string name="home_device_scan_status_threats">⚠️ %1$d Threats Detected (Score: %2$d/100)</string>
+    <string name="home_device_scan_status_never">Ready to scan (Tap to start)</string>
+
     <!-- Ad UI Strings -->
     <string name="btn_rewarded_ai_scan">⚡ Watch Ad for Deep AI Cloud Analysis</string>
     <string name="rewarded_ad_loading">Loading sponsor video…</string>

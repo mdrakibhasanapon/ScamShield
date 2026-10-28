@@ -12,6 +12,11 @@
 
     <!-- Android 13+ Notification Alerts for Detected Threats -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Full Device Antivirus & Installed Package Audit -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission" />
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     
     <!-- Camera is strictly optional for QR code scanning & screenshot capture -->
     <uses-feature
@@ -84,6 +89,13 @@
             android:name=".ui.result.ResultActivity"
             android:exported="false"
             android:label="@string/title_security_assessment"
+            android:parentActivityName=".ui.MainActivity" />
+
+        <!-- Full Device Security & Malware Scan Screen -->
+        <activity
+            android:name=".ui.scan.DeviceScanActivity"
+            android:exported="false"
+            android:label="@string/title_device_scan"
             android:parentActivityName=".ui.MainActivity" />
 
         <!-- Scam Education Article Detail -->

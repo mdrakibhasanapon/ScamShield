@@ -65,6 +65,9 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
     private MaterialButton btnSimulateSms;
     private TextView tvSmsTroubleshoot;
 
+    // Full Phone Device Security Scan UI
+    private TextView tvDeviceScanStatus;
+
     private ActivityResultLauncher<String[]> smsPermissionLauncher;
 
     // Real-time broadcast receiver to catch incoming SMS updates while viewing Home
@@ -135,6 +138,15 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
 
         tvSmsTroubleshoot.setOnClickListener(v -> showTroubleshootDialog());
 
+        // Full Phone Device Security Scan Setup
+        tvDeviceScanStatus = view.findViewById(R.id.tv_device_scan_status);
+        view.findViewById(R.id.btn_start_device_scan).setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), com.scamshield.app.ui.scan.DeviceScanActivity.class));
+        });
+        view.findViewById(R.id.card_device_scan).setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), com.scamshield.app.ui.scan.DeviceScanActivity.class));
+        });
+
         // Action Buttons Setup
         view.findViewById(R.id.card_action_message).setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), CheckMessageActivity.class));
@@ -160,6 +172,7 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
         super.onResume();
         loadRecentScans();
         updateSmsShieldUI();
+        updateDeviceScanStatusUI();
 
         // Register receiver for real-time background SMS updates
         try {
@@ -205,6 +218,22 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
             tvSmsShieldStatus.setText(R.string.sms_shield_status_active);
             tvSmsShieldStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.risk_low));
             layoutPermissionWarning.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateDeviceScanStatusUI() {
+        if (!isAdded() || tvDeviceScanStatus == null) return;
+        int lastScore = preferencesManager.getLastDeviceScore();
+        int threatCount = preferencesManager.getLastDeviceThreatCount();
+        if (lastScore == -1) {
+            tvDeviceScanStatus.setText(R.string.home_device_scan_status_never);
+            tvDeviceScanStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.brand_primary));
+        } else if (threatCount == 0) {
+            tvDeviceScanStatus.setText(getString(R.string.home_device_scan_status_clean, lastScore));
+            tvDeviceScanStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.risk_low));
+        } else {
+            tvDeviceScanStatus.setText(getString(R.string.home_device_scan_status_threats, threatCount, lastScore));
+            tvDeviceScanStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.risk_high));
         }
     }
 

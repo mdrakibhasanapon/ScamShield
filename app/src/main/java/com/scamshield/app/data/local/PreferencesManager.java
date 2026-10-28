@@ -66,6 +66,34 @@ public class PreferencesManager {
         prefs.edit().putBoolean(KEY_NOTIFY_ALL_SMS, notifyAll).apply();
     }
 
+    public static final String KEY_LAST_DEVICE_SCAN_TIME = "last_device_scan_time";
+    public static final String KEY_LAST_DEVICE_SCORE = "last_device_score";
+    public static final String KEY_LAST_DEVICE_THREAT_COUNT = "last_device_threat_count";
+
+    public long getLastDeviceScanTime() {
+        return prefs.getLong(KEY_LAST_DEVICE_SCAN_TIME, 0);
+    }
+
+    public void setLastDeviceScanTime(long time) {
+        prefs.edit().putLong(KEY_LAST_DEVICE_SCAN_TIME, time).apply();
+    }
+
+    public int getLastDeviceScore() {
+        return prefs.getInt(KEY_LAST_DEVICE_SCORE, -1);
+    }
+
+    public void setLastDeviceScore(int score) {
+        prefs.edit().putInt(KEY_LAST_DEVICE_SCORE, score).apply();
+    }
+
+    public int getLastDeviceThreatCount() {
+        return prefs.getInt(KEY_LAST_DEVICE_THREAT_COUNT, 0);
+    }
+
+    public void setLastDeviceThreatCount(int count) {
+        prefs.edit().putInt(KEY_LAST_DEVICE_THREAT_COUNT, count).apply();
+    }
+
     public void clearAllPreferences() {
         prefs.edit().clear().apply();
     }

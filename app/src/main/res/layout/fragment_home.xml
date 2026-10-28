@@ -222,6 +222,88 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Full Phone Antivirus & Threat Scanner Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_device_scan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/brand_primary"
+            app:cardBackgroundColor="@color/surface_variant_light">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_device_scan"
+                        app:tint="@color/brand_primary"
+                        android:contentDescription="@null" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/home_device_scan_title"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_primary_light" />
+
+                        <TextView
+                            android:id="@+id/tv_device_scan_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/home_device_scan_status_never"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/brand_primary" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/home_device_scan_desc"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="2dp"
+                    android:textColor="@color/text_secondary_light" />
+
+                <!-- Action Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_start_device_scan"
+                    style="@style/Widget.Material3.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/home_device_scan_btn"
+                    android:textSize="14sp"
+                    app:icon="@drawable/ic_device_scan"
+                    app:iconSize="20dp" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
         <!-- Section: What would you like to check? -->
         <TextView
             android:layout_width="match_parent"

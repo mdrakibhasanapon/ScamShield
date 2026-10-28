@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_light">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface_light"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_device_scan"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="@string/title_device_scan"
+            app:titleTextColor="@color/text_primary_light"
+            app:navigationIcon="@drawable/ic_shield_check"
+            app:navigationIconTint="@color/brand_primary" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!-- ===================================== -->
+        <!-- STATE 1: SCANNING PROGRESS CONTAINER  -->
+        <!-- ===================================== -->
+        <LinearLayout
+            android:id="@+id/layout_scan_progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="32dp"
+            android:visibility="visible">
+
+            <!-- Radar / Progress Indicator -->
+            <FrameLayout
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_gravity="center">
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/progress_indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:indeterminate="false"
+                    app:indicatorSize="160dp"
+                    app:trackThickness="10dp"
+                    app:indicatorColor="@color/brand_primary"
+                    app:trackColor="@color/divider_light" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_progress_percent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0%"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/brand_primary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Scanning"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary_light" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_scan_phase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Starting Device Security Audit…"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary_light"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/tv_current_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Auditing application permissions and storage…"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary_light"
+                android:textAlignment="center"
+                android:ellipsize="middle"
+                android:maxLines="2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:text="🔒 100% On-Device: No files or personal data are ever uploaded."
+                android:textSize="12sp"
+                android:textColor="@color/text_tertiary_light"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
+        <!-- ===================================== -->
+        <!-- STATE 2: SCAN RESULTS DASHBOARD       -->
+        <!-- ===================================== -->
+        <LinearLayout
+            android:id="@+id/layout_scan_results"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- Health Score Hero Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_health_score"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp"
+                        app:cardBackgroundColor="@color/brand_primary">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/tv_health_score_title"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Device Protected"
+                                        android:textSize="20sp"
+                                        android:textStyle="bold"
+                                        android:textColor="@color/white" />
+
+                                    <TextView
+                                        android:id="@+id/tv_health_score_desc"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:text="All scanned apps &amp; files are clean."
+                                        android:textSize="13sp"
+                                        android:textColor="#E2E8F0" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/tv_health_score_number"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="100"
+                                    android:textSize="36sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/white" />
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="#33FFFFFF"
+                                android:layout_marginVertical="14dp" />
+
+                            <!-- Breakdown Stats -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/tv_stat_apps"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Apps: 0"
+                                    android:textSize="12sp"
+                                    android:textColor="#E2E8F0" />
+
+                                <TextView
+                                    android:id="@+id/tv_stat_files"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Files: 0"
+                                    android:textSize="12sp"
+                                    android:textColor="#E2E8F0" />
+
+                                <TextView
+                                    android:id="@+id/tv_stat_threats"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Threats: 0"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="#FEE2E2" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Filter Tabs -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="12dp"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_filter_threats"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="6dp"
+                            android:text="Threats Found (0)"
+                            android:textSize="13sp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_filter_all"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="6dp"
+                            android:text="All Items (0)"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <!-- All Clean Celebration State -->
+                    <LinearLayout
+                        android:id="@+id/layout_empty_threats"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="32dp"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:src="@drawable/ic_shield_check"
+                            app:tint="@color/risk_low"
+                            android:contentDescription="@null" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="No Malicious Items Found"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_primary_light" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="Your applications, storage, and system settings have no obvious trojans or suspicious permissions."
+                            android:textSize="13sp"
+                            android:textColor="@color/text_secondary_light"
+                            android:textAlignment="center" />
+                    </LinearLayout>
+
+                    <!-- Threats / Items Recycler -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_threat_items"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false" />
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+            <!-- Bottom Actions -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:background="@color/surface_light"
+                android:elevation="8dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_rescan"
+                    style="@style/Widget.Material3.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_rescan_device"
+                    android:textSize="15sp"
+                    app:icon="@drawable/ic_device_scan"
+                    app:iconSize="20dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

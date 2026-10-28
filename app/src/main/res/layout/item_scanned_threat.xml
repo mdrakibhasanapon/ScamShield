@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_threat_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="1dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/divider_light"
+    app:cardBackgroundColor="@color/surface_light">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header: Icon, Titles, and Severity Badge -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/iv_threat_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_shield_check"
+                android:contentDescription="@null" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_threat_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Application Name"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary_light"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+
+                <TextView
+                    android:id="@+id/tv_threat_subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="com.example.package"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary_light"
+                    android:ellipsize="middle"
+                    android:maxLines="1" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_threat_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:text="HIGH RISK"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="@color/risk_high"
+                android:background="@color/risk_high_bg" />
+        </LinearLayout>
+
+        <!-- Threat Name & Explanation -->
+        <TextView
+            android:id="@+id/tv_threat_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Suspicious Permission Combo"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/risk_high" />
+
+        <TextView
+            android:id="@+id/tv_threat_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Explanation of detected danger..."
+            android:textSize="13sp"
+            android:lineSpacingExtra="2dp"
+            android:textColor="@color/text_secondary_light" />
+
+        <!-- Bullet Reasons Container -->
+        <LinearLayout
+            android:id="@+id/layout_threat_reasons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical" />
+
+        <!-- Bottom Action Bar / Resolved State -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:gravity="end|center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_threat_resolved"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="✓ Threat Removed / Resolved"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="@color/risk_low"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_threat_action"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Uninstall App"
+                android:textSize="13sp"
+                android:textColor="@color/risk_high"
+                app:icon="@drawable/ic_delete_trash"
+                app:iconTint="@color/risk_high"
+                app:iconSize="18dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
