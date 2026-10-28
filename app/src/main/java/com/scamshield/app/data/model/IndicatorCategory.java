@@ -9,7 +9,8 @@ public enum IndicatorCategory {
     PRIZE_BAIT("Unsolicited Prize / Lottery"),
     DELIVERY_SCAM("Parcel & Delivery Fraud"),
     SOCIAL_ENGINEERING("Social Engineering Patterns"),
-    MALICIOUS_DOWNLOAD("Malicious File & Download");
+    MALICIOUS_DOWNLOAD("Malicious File & Download"),
+    DATA_EXFILTRATION("Data Exfiltration & Privacy Leak");
 
     private final String displayName;
 

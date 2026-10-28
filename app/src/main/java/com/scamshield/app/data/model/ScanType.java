@@ -5,7 +5,8 @@ public enum ScanType {
     URL("Link / URL"),
     SCREENSHOT("Screenshot OCR"),
     QR_CODE("QR Code"),
-    FILE_DOWNLOAD("Downloaded File / APK");
+    FILE_DOWNLOAD("Downloaded File / APK"),
+    NETWORK_TRAFFIC("App Network & Data Traffic");
 
     private final String label;
 

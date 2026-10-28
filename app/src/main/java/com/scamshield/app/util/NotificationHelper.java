@@ -24,6 +24,7 @@ public class NotificationHelper {
     public static final String CHANNEL_ID_ALERTS = "scamshield_threat_alerts";
     public static final String CHANNEL_ID_CLEAN = "scamshield_clean_messages";
     public static final String CHANNEL_ID_DOWNLOADS = "scamshield_download_alerts";
+    public static final String CHANNEL_ID_NETWORK = "scamshield_network_alerts";
 
     public static void createNotificationChannels(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -62,6 +63,18 @@ public class NotificationHelper {
             downloadChannel.setLightColor(Color.RED);
             downloadChannel.enableVibration(true);
             manager.createNotificationChannel(downloadChannel);
+
+            // Channel 4: High Priority App Network & Data Exfiltration Alerts
+            NotificationChannel networkChannel = new NotificationChannel(
+                    CHANNEL_ID_NETWORK,
+                    "App Data & Network Watchdog",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            networkChannel.setDescription("Instant alerts when apps upload sensitive data, leak passwords over HTTP, or contact spyware C2 servers.");
+            networkChannel.enableLights(true);
+            networkChannel.setLightColor(Color.RED);
+            networkChannel.enableVibration(true);
+            manager.createNotificationChannel(networkChannel);
         }
     }
 
@@ -236,6 +249,80 @@ public class NotificationHelper {
             );
 
             builder.addAction(R.drawable.ic_delete_trash, "🗑️ Delete File", deletePendingIntent);
+        }
+
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (manager != null) {
+            manager.notify(notificationId, builder.build());
+        }
+    }
+
+    public static void showNetworkAlertNotification(Context context, com.scamshield.app.data.model.NetworkTrafficItem item) {
+        if (context == null || item == null) return;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+        }
+
+        createNotificationChannels(context);
+
+        int notificationId = ("network_" + item.getId()).hashCode();
+
+        Intent openIntent = new Intent(context, com.scamshield.app.ui.network.NetworkTrafficActivity.class);
+        openIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context,
+                notificationId,
+                openIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0)
+        );
+
+        String title;
+        int color;
+        if (item.getRiskLevel() == RiskLevel.HIGH_RISK) {
+            title = "🚨 Suspicious Data Upload: " + item.getAppName() + " (" + item.getRiskScore() + "/100)";
+            color = ContextCompat.getColor(context, R.color.risk_high);
+        } else {
+            title = "⚠️ App Data Warning: " + item.getAppName() + " (" + item.getRiskScore() + "/100)";
+            color = ContextCompat.getColor(context, R.color.risk_suspicious);
+        }
+
+        String dataAmount = item.getDirection() == com.scamshield.app.data.model.NetworkTrafficItem.Direction.UPLOAD ?
+                "Uploaded: " + com.scamshield.app.data.model.NetworkTrafficItem.formatBytes(item.getBytesUploaded()) :
+                "Downloaded: " + com.scamshield.app.data.model.NetworkTrafficItem.formatBytes(item.getBytesDownloaded());
+
+        String details = "App: " + item.getAppName() + " (" + item.getPackageName() + ")\n" +
+                "Destination: " + item.getDestinationHost() + " (" + item.getDestinationIp() + ":" + item.getDestinationPort() + ")\n" +
+                "Traffic: " + dataAmount + " via " + item.getProtocol() + "\n\n" +
+                "Threat Assessment:\n• " + item.getWhyFlagged() + "\n\n" +
+                "Action: " + item.getRecommendedAction();
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID_NETWORK)
+                .setSmallIcon(R.drawable.ic_shield_check)
+                .setContentTitle(title)
+                .setContentText(item.getWhyFlagged())
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .setBigContentTitle(title)
+                        .bigText(details))
+                .setColor(color)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .addAction(R.drawable.ic_action_link, "Inspect Traffic", pendingIntent);
+
+        // Action to open Android System App Settings so user can restrict background data or uninstall
+        if (item.getPackageName() != null && !item.getPackageName().isEmpty()) {
+            Intent settingsIntent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            settingsIntent.setData(android.net.Uri.parse("package:" + item.getPackageName()));
+            PendingIntent settingsPendingIntent = PendingIntent.getActivity(
+                    context,
+                    notificationId + 2,
+                    settingsIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0)
+            );
+            builder.addAction(R.drawable.ic_device_scan, "Restrict App", settingsPendingIntent);
         }
 
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

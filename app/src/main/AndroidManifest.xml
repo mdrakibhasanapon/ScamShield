@@ -10,6 +10,10 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
+    <!-- App Data & Network Traffic Monitoring -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />
+
     <!-- Android 13+ Notification Alerts for Detected Threats -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
@@ -148,6 +152,22 @@
                 <action android:name="com.scamshield.app.ACTION_DELETE_DOWNLOAD" />
             </intent-filter>
         </receiver>
+
+        <!-- App Data & Network Traffic Monitor Activity -->
+        <activity
+            android:name=".ui.network.NetworkTrafficActivity"
+            android:exported="false"
+            android:theme="@style/Theme.ScamShield" />
+
+        <!-- On-Device Local Network Sentinel Service -->
+        <service
+            android:name=".service.NetworkSentinelVpnService"
+            android:permission="android.permission.BIND_VPN_SERVICE"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+            </intent-filter>
+        </service>
 
     </application>
 

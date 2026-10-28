@@ -222,6 +222,13 @@
     <string name="settings_notify_clean_downloads">Alert for Safe Downloads</string>
     <string name="settings_notify_clean_downloads_desc">Show low-priority confirmation for verified clean downloads (score 0/100)</string>
 
+    <!-- App Data & Network Watchdog -->
+    <string name="title_network_traffic">App Data &amp; Network Watchdog</string>
+    <string name="home_network_traffic_title">App Data &amp; Network Watchdog</string>
+    <string name="home_network_traffic_desc">Track which apps are downloading or uploading data, where it is sent, and detect privacy leaks on-device.</string>
+    <string name="home_network_traffic_btn">📡 Inspect App Data &amp; Destinations</string>
+    <string name="home_network_traffic_status">Real-time Watchdog Ready</string>
+
     <!-- Ad UI Strings -->
     <string name="btn_rewarded_ai_scan">⚡ Watch Ad for Deep AI Cloud Analysis</string>
     <string name="rewarded_ad_loading">Loading sponsor video…</string>
