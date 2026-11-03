@@ -229,6 +229,10 @@
     <string name="home_network_traffic_btn">📡 Inspect App Data &amp; Destinations</string>
     <string name="home_network_traffic_status">Real-time Watchdog Ready</string>
 
+    <!-- Notification Vibration Alerts -->
+    <string name="settings_notification_vibration">Notification Vibration Alerts</string>
+    <string name="settings_notification_vibration_desc">Vibrate phone with distinct alert patterns when threats or security notifications are detected</string>
+
     <!-- Ad UI Strings -->
     <string name="btn_rewarded_ai_scan">⚡ Watch Ad for Deep AI Cloud Analysis</string>
     <string name="rewarded_ad_loading">Loading sponsor video…</string>

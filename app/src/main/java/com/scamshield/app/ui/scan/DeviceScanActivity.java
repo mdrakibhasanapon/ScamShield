@@ -152,6 +152,13 @@ public class DeviceScanActivity extends AppCompatActivity implements ThreatItemA
                 preferencesManager.setLastDeviceScore(summary.getDeviceSecurityScore());
                 preferencesManager.setLastDeviceThreatCount(summary.getThreatCount());
 
+                if (summary.getThreatCount() > 0) {
+                    com.scamshield.app.util.VibrationHelper.triggerThreatVibration(
+                            DeviceScanActivity.this,
+                            summary.getDeviceSecurityScore() < 60
+                    );
+                }
+
                 bindSummary(summary);
             }
 

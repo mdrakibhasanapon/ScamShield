@@ -29,6 +29,7 @@ public class SettingsFragment extends Fragment {
     private MaterialSwitch switchNotifyAllSms;
     private MaterialSwitch switchDownloadShield;
     private MaterialSwitch switchNotifyCleanDownloads;
+    private MaterialSwitch switchNotificationVibration;
 
     @Nullable
     @Override
@@ -102,6 +103,17 @@ public class SettingsFragment extends Fragment {
         switchNotifyCleanDownloads.setChecked(preferencesManager.isNotifyCleanDownloadsEnabled());
         switchNotifyCleanDownloads.setOnCheckedChangeListener((buttonView, isChecked) -> {
             preferencesManager.setNotifyCleanDownloadsEnabled(isChecked);
+        });
+
+        // Notification Vibration Alerts Switch
+        switchNotificationVibration = view.findViewById(R.id.switch_notification_vibration);
+        switchNotificationVibration.setChecked(preferencesManager.isNotificationVibrationEnabled());
+        switchNotificationVibration.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferencesManager.setNotificationVibrationEnabled(isChecked);
+            if (isChecked) {
+                com.scamshield.app.util.VibrationHelper.triggerTestVibration(requireContext());
+                Toast.makeText(requireContext(), "Vibration alerts active", Toast.LENGTH_SHORT).show();
+            }
         });
 
         // Delete All Data Button

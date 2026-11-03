@@ -21,15 +21,25 @@ import com.scamshield.app.ui.result.ResultActivity;
 
 public class NotificationHelper {
 
-    public static final String CHANNEL_ID_ALERTS = "scamshield_threat_alerts";
-    public static final String CHANNEL_ID_CLEAN = "scamshield_clean_messages";
-    public static final String CHANNEL_ID_DOWNLOADS = "scamshield_download_alerts";
-    public static final String CHANNEL_ID_NETWORK = "scamshield_network_alerts";
+    public static final String CHANNEL_ID_ALERTS = "scamshield_threat_alerts_v2";
+    public static final String CHANNEL_ID_CLEAN = "scamshield_clean_messages_v2";
+    public static final String CHANNEL_ID_DOWNLOADS = "scamshield_download_alerts_v2";
+    public static final String CHANNEL_ID_NETWORK = "scamshield_network_alerts_v2";
+
+    public static final long[] VIBRATION_PATTERN_THREAT = VibrationHelper.PATTERN_THREAT;
 
     public static void createNotificationChannels(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager manager = context.getSystemService(NotificationManager.class);
             if (manager == null) return;
+
+            // Clean up legacy v1 channels to migrate to vibration-enabled v2 channels cleanly
+            try {
+                manager.deleteNotificationChannel("scamshield_threat_alerts");
+                manager.deleteNotificationChannel("scamshield_clean_messages");
+                manager.deleteNotificationChannel("scamshield_download_alerts");
+                manager.deleteNotificationChannel("scamshield_network_alerts");
+            } catch (Exception ignored) {}
 
             // Channel 1: High Priority Threat Alerts (Sound, Vibration, Heads-up)
             NotificationChannel threatChannel = new NotificationChannel(
@@ -37,10 +47,11 @@ public class NotificationHelper {
                     "Scam & Phishing Threat Alerts",
                     NotificationManager.IMPORTANCE_HIGH
             );
-            threatChannel.setDescription("Instant alerts when incoming SMS messages show scam, phishing, or fraud indicators.");
+            threatChannel.setDescription("Instant alerts with phone vibration when incoming SMS messages show scam or phishing indicators.");
             threatChannel.enableLights(true);
             threatChannel.setLightColor(Color.RED);
             threatChannel.enableVibration(true);
+            threatChannel.setVibrationPattern(VIBRATION_PATTERN_THREAT);
             manager.createNotificationChannel(threatChannel);
 
             // Channel 2: Low Priority Informational Clean Scans
@@ -50,6 +61,7 @@ public class NotificationHelper {
                     NotificationManager.IMPORTANCE_LOW
             );
             cleanChannel.setDescription("Subtle summaries for incoming messages with no obvious scam indicators.");
+            cleanChannel.enableVibration(false);
             manager.createNotificationChannel(cleanChannel);
 
             // Channel 3: High Priority Download Security Alerts
@@ -58,10 +70,11 @@ public class NotificationHelper {
                     "Download Security Watchdog",
                     NotificationManager.IMPORTANCE_HIGH
             );
-            downloadChannel.setDescription("Instant alerts when downloaded files show trojan, malware, or disguised indicators.");
+            downloadChannel.setDescription("Instant alerts with phone vibration when downloaded files show trojan, malware, or disguised indicators.");
             downloadChannel.enableLights(true);
             downloadChannel.setLightColor(Color.RED);
             downloadChannel.enableVibration(true);
+            downloadChannel.setVibrationPattern(VIBRATION_PATTERN_THREAT);
             manager.createNotificationChannel(downloadChannel);
 
             // Channel 4: High Priority App Network & Data Exfiltration Alerts
@@ -70,10 +83,11 @@ public class NotificationHelper {
                     "App Data & Network Watchdog",
                     NotificationManager.IMPORTANCE_HIGH
             );
-            networkChannel.setDescription("Instant alerts when apps upload sensitive data, leak passwords over HTTP, or contact spyware C2 servers.");
+            networkChannel.setDescription("Instant alerts with phone vibration when apps upload sensitive data, leak passwords over HTTP, or contact spyware C2 servers.");
             networkChannel.enableLights(true);
             networkChannel.setLightColor(Color.RED);
             networkChannel.enableVibration(true);
+            networkChannel.setVibrationPattern(VIBRATION_PATTERN_THREAT);
             manager.createNotificationChannel(networkChannel);
         }
     }
@@ -152,9 +166,16 @@ public class NotificationHelper {
                 .setPriority(priority)
                 .addAction(R.drawable.ic_shield_check, "Inspect Threat Report", pendingIntent);
 
+        if (prefs.isNotificationVibrationEnabled() && riskLevel != RiskLevel.LOW_RISK) {
+            builder.setVibrate(VIBRATION_PATTERN_THREAT);
+            builder.setDefaults(NotificationCompat.DEFAULT_SOUND | NotificationCompat.DEFAULT_LIGHTS);
+        }
+
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager != null) {
             manager.notify(notificationId, builder.build());
+            // Trigger direct hardware vibration for unmistakable physical alert
+            VibrationHelper.triggerNotificationVibration(context, riskLevel);
         }
     }
 
@@ -251,9 +272,16 @@ public class NotificationHelper {
             builder.addAction(R.drawable.ic_delete_trash, "🗑️ Delete File", deletePendingIntent);
         }
 
+        if (prefs.isNotificationVibrationEnabled() && riskLevel != RiskLevel.LOW_RISK) {
+            builder.setVibrate(VIBRATION_PATTERN_THREAT);
+            builder.setDefaults(NotificationCompat.DEFAULT_SOUND | NotificationCompat.DEFAULT_LIGHTS);
+        }
+
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager != null) {
             manager.notify(notificationId, builder.build());
+            // Trigger direct hardware vibration for unmistakable physical alert
+            VibrationHelper.triggerNotificationVibration(context, riskLevel);
         }
     }
 
@@ -325,9 +353,17 @@ public class NotificationHelper {
             builder.addAction(R.drawable.ic_device_scan, "Restrict App", settingsPendingIntent);
         }
 
+        PreferencesManager prefs = new PreferencesManager(context);
+        if (prefs.isNotificationVibrationEnabled() && item.getRiskLevel() != RiskLevel.LOW_RISK) {
+            builder.setVibrate(VIBRATION_PATTERN_THREAT);
+            builder.setDefaults(NotificationCompat.DEFAULT_SOUND | NotificationCompat.DEFAULT_LIGHTS);
+        }
+
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager != null) {
             manager.notify(notificationId, builder.build());
+            // Trigger direct hardware vibration for unmistakable physical alert
+            VibrationHelper.triggerNotificationVibration(context, item.getRiskLevel());
         }
     }
 }

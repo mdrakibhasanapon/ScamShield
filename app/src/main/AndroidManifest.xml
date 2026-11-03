@@ -10,6 +10,9 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
+    <!-- Vibration alerts for security threats & notifications -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <!-- App Data & Network Traffic Monitoring -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />

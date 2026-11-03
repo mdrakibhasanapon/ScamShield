@@ -68,6 +68,15 @@ public class PreferencesManager {
 
     public static final String KEY_DOWNLOAD_WATCHDOG = "download_watchdog_enabled";
     public static final String KEY_NOTIFY_CLEAN_DOWNLOADS = "notify_clean_downloads";
+    public static final String KEY_NOTIFICATION_VIBRATION = "pref_notification_vibration";
+
+    public boolean isNotificationVibrationEnabled() {
+        return prefs.getBoolean(KEY_NOTIFICATION_VIBRATION, true);
+    }
+
+    public void setNotificationVibrationEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_NOTIFICATION_VIBRATION, enabled).apply();
+    }
 
     public boolean isDownloadWatchdogEnabled() {
         return prefs.getBoolean(KEY_DOWNLOAD_WATCHDOG, true);
