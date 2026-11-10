@@ -384,6 +384,18 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
         } catch (Exception ignored) {}
     }
 
+    public void refreshAllShieldsUI() {
+        if (!isAdded() || getView() == null) return;
+        updateSmsShieldUI();
+        updateDownloadShieldUI();
+        updateChatWatchdogUI();
+        updateDeviceScanStatusUI();
+        updateContactSyncUI();
+        updateMicShieldUI();
+        updateLocationRadarUI();
+        updateHealthScoreUI(getView());
+    }
+
     public void updateSmsShieldUI() {
         if (!isAdded()) return;
 

@@ -322,4 +322,12 @@
     <string name="settings_call_safety_desc">Show heads-up security advisory when unknown calls arrive</string>
     <string name="settings_financial_shield">bKash &amp; Payment Fraud Shield</string>
     <string name="settings_financial_shield_desc">Detect fake MFS money-sent SMS and OTP social engineering</string>
+
+    <!-- Initial All-In-One Permission Setup -->
+    <string name="initial_setup_dialog_title">Complete Initial Security Setup</string>
+    <string name="initial_setup_dialog_msg">To activate all real-time security shields (SMS Scam Protection, Voice Phishing Guard, Regional Threat Radar, and Trusted Contacts), ScamShield will now request the necessary permissions in a single setup.</string>
+    <string name="initial_setup_dialog_grant">Activate All Defenses</string>
+    <string name="initial_chat_watchdog_title">Enable Universal Chat Watchdog</string>
+    <string name="initial_chat_watchdog_msg">To protect WhatsApp, Telegram, and Messenger from phishing links and fraud in real-time, please allow ScamShield in Notification Access.</string>
+    <string name="initial_chat_watchdog_btn">Open Notification Access Settings</string>
 </resources>
