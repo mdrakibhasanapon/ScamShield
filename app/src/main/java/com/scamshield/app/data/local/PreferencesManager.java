@@ -69,6 +69,24 @@ public class PreferencesManager {
     public static final String KEY_DOWNLOAD_WATCHDOG = "download_watchdog_enabled";
     public static final String KEY_NOTIFY_CLEAN_DOWNLOADS = "notify_clean_downloads";
     public static final String KEY_NOTIFICATION_VIBRATION = "pref_notification_vibration";
+    public static final String KEY_UNIVERSAL_CHAT_WATCHDOG = "pref_universal_chat_watchdog";
+    public static final String KEY_NOTIFY_SAFE_CHATS = "pref_notify_safe_chats";
+
+    public boolean isUniversalChatWatchdogEnabled() {
+        return prefs.getBoolean(KEY_UNIVERSAL_CHAT_WATCHDOG, true);
+    }
+
+    public void setUniversalChatWatchdogEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_UNIVERSAL_CHAT_WATCHDOG, enabled).apply();
+    }
+
+    public boolean isNotifySafeChatsEnabled() {
+        return prefs.getBoolean(KEY_NOTIFY_SAFE_CHATS, false);
+    }
+
+    public void setNotifySafeChatsEnabled(boolean notifySafe) {
+        prefs.edit().putBoolean(KEY_NOTIFY_SAFE_CHATS, notifySafe).apply();
+    }
 
     public boolean isNotificationVibrationEnabled() {
         return prefs.getBoolean(KEY_NOTIFICATION_VIBRATION, true);

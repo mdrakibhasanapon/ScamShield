@@ -29,6 +29,8 @@ public class SettingsFragment extends Fragment {
     private MaterialSwitch switchNotifyAllSms;
     private MaterialSwitch switchDownloadShield;
     private MaterialSwitch switchNotifyCleanDownloads;
+    private MaterialSwitch switchChatWatchdog;
+    private MaterialSwitch switchNotifySafeChats;
     private MaterialSwitch switchNotificationVibration;
 
     @Nullable
@@ -103,6 +105,22 @@ public class SettingsFragment extends Fragment {
         switchNotifyCleanDownloads.setChecked(preferencesManager.isNotifyCleanDownloadsEnabled());
         switchNotifyCleanDownloads.setOnCheckedChangeListener((buttonView, isChecked) -> {
             preferencesManager.setNotifyCleanDownloadsEnabled(isChecked);
+        });
+
+        // Universal Messaging Watchdog Switches
+        switchChatWatchdog = view.findViewById(R.id.switch_chat_watchdog_settings);
+        switchChatWatchdog.setChecked(preferencesManager.isUniversalChatWatchdogEnabled());
+        switchChatWatchdog.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferencesManager.setUniversalChatWatchdogEnabled(isChecked);
+            if (isChecked && !com.scamshield.app.service.UniversalMessageListenerService.isNotificationAccessGranted(requireContext())) {
+                com.scamshield.app.service.UniversalMessageListenerService.openNotificationAccessSettings(requireContext());
+            }
+        });
+
+        switchNotifySafeChats = view.findViewById(R.id.switch_notify_safe_chats);
+        switchNotifySafeChats.setChecked(preferencesManager.isNotifySafeChatsEnabled());
+        switchNotifySafeChats.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferencesManager.setNotifySafeChatsEnabled(isChecked);
         });
 
         // Notification Vibration Alerts Switch

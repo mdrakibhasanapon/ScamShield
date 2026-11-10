@@ -6,7 +6,8 @@ public enum ScanType {
     SCREENSHOT("Screenshot OCR"),
     QR_CODE("QR Code"),
     FILE_DOWNLOAD("Downloaded File / APK"),
-    NETWORK_TRAFFIC("App Network & Data Traffic");
+    NETWORK_TRAFFIC("App Network & Data Traffic"),
+    CHAT_MESSAGE("Chat App Message (WhatsApp/Telegram/Messenger)");
 
     private final String label;
 

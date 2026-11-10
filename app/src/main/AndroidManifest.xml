@@ -172,6 +172,17 @@
             </intent-filter>
         </service>
 
+        <!-- Real-Time Universal Messaging Watchdog (WhatsApp, Telegram, Messenger, Signal, etc.) -->
+        <service
+            android:name=".service.UniversalMessageListenerService"
+            android:label="@string/chat_watchdog_service_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

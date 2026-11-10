@@ -233,6 +233,21 @@
     <string name="settings_notification_vibration">Notification Vibration Alerts</string>
     <string name="settings_notification_vibration_desc">Vibrate phone with distinct alert patterns when threats or security notifications are detected</string>
 
+    <!-- Real-Time Universal Messaging Watchdog (WhatsApp, Telegram, Messenger, Signal, etc.) -->
+    <string name="chat_watchdog_service_name">ScamShield Universal Chat Watchdog</string>
+    <string name="chat_watchdog_title">Universal Chat Watchdog</string>
+    <string name="chat_watchdog_desc">Monitors incoming messages across WhatsApp, Telegram, Messenger, Signal, IMO, Discord, Viber, SMS &amp; more. Flags scams, malicious links, and extortion threats instantly on-device.</string>
+    <string name="chat_watchdog_apps_supported">WhatsApp • Telegram • Messenger • Signal • IMO • Discord</string>
+    <string name="chat_watchdog_status_active">Chat Shield Active (All Messaging Apps)</string>
+    <string name="chat_watchdog_status_inactive">Chat Shield Paused</string>
+    <string name="chat_watchdog_status_permission_needed">Notification Access Required</string>
+    <string name="chat_watchdog_btn_grant">Enable Notification Access</string>
+    <string name="chat_watchdog_btn_simulate">🧪 Test Chat Scam Alert</string>
+    <string name="settings_chat_watchdog">Universal Chat Watchdog</string>
+    <string name="settings_chat_watchdog_desc">Monitor incoming WhatsApp, Telegram, Messenger, Signal &amp; IMO messages on-device</string>
+    <string name="settings_notify_safe_chats">Alert for Safe Chat Messages</string>
+    <string name="settings_notify_safe_chats_desc">Show low-priority confirmation when a safe incoming chat message is scanned</string>
+
     <!-- Ad UI Strings -->
     <string name="btn_rewarded_ai_scan">⚡ Watch Ad for Deep AI Cloud Analysis</string>
     <string name="rewarded_ad_loading">Loading sponsor video…</string>

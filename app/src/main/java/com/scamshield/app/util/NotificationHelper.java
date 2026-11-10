@@ -25,6 +25,7 @@ public class NotificationHelper {
     public static final String CHANNEL_ID_CLEAN = "scamshield_clean_messages_v2";
     public static final String CHANNEL_ID_DOWNLOADS = "scamshield_download_alerts_v2";
     public static final String CHANNEL_ID_NETWORK = "scamshield_network_alerts_v2";
+    public static final String CHANNEL_ID_CHATS = "scamshield_chat_alerts_v2";
 
     public static final long[] VIBRATION_PATTERN_THREAT = VibrationHelper.PATTERN_THREAT;
 
@@ -89,6 +90,19 @@ public class NotificationHelper {
             networkChannel.enableVibration(true);
             networkChannel.setVibrationPattern(VIBRATION_PATTERN_THREAT);
             manager.createNotificationChannel(networkChannel);
+
+            // Channel 5: High Priority Universal Chat Alerts (WhatsApp, Telegram, Messenger, Signal, etc.)
+            NotificationChannel chatChannel = new NotificationChannel(
+                    CHANNEL_ID_CHATS,
+                    "Universal Chat Watchdog Alerts",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            chatChannel.setDescription("Instant alerts with phone vibration when incoming messages from WhatsApp, Telegram, Messenger, etc. contain scams or phishing.");
+            chatChannel.enableLights(true);
+            chatChannel.setLightColor(Color.RED);
+            chatChannel.enableVibration(true);
+            chatChannel.setVibrationPattern(VIBRATION_PATTERN_THREAT);
+            manager.createNotificationChannel(chatChannel);
         }
     }
 
@@ -364,6 +378,90 @@ public class NotificationHelper {
             manager.notify(notificationId, builder.build());
             // Trigger direct hardware vibration for unmistakable physical alert
             VibrationHelper.triggerNotificationVibration(context, item.getRiskLevel());
+        }
+    }
+
+    public static void showChatScanNotification(Context context, String appName, String sender, String messageText, ScamAnalysisResult result) {
+        if (context == null || result == null) return;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+        }
+
+        createNotificationChannels(context);
+
+        PreferencesManager prefs = new PreferencesManager(context);
+        RiskLevel riskLevel = result.getRiskLevel();
+        int score = result.getRiskScore();
+
+        // If low risk and user has not enabled safe chat notifications, remain quiet to avoid notification clutter
+        if (riskLevel == RiskLevel.LOW_RISK && !prefs.isNotifySafeChatsEnabled()) {
+            return;
+        }
+
+        int notificationId = ("chat_" + appName + sender + messageText).hashCode();
+
+        Intent openIntent = new Intent(context, ResultActivity.class);
+        openIntent.putExtra(ResultActivity.EXTRA_RESULT, result);
+        openIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context,
+                notificationId,
+                openIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0)
+        );
+
+        String title;
+        String snippet = result.getSnippet(100);
+        String reasonSnippet = (result.getWhyFlagged() != null && !result.getWhyFlagged().isEmpty())
+                ? result.getWhyFlagged().get(0)
+                : "Exercise caution before responding or tapping links.";
+
+        int color;
+        String channelId = CHANNEL_ID_CHATS;
+        int priority = NotificationCompat.PRIORITY_HIGH;
+
+        if (riskLevel == RiskLevel.HIGH_RISK) {
+            title = "🚨 " + appName + " Scam Alert: " + sender + " (" + score + "/100)";
+            color = ContextCompat.getColor(context, R.color.risk_high);
+        } else if (riskLevel == RiskLevel.SUSPICIOUS) {
+            title = "⚠️ Suspicious " + appName + " Chat: " + sender + " (" + score + "/100)";
+            color = ContextCompat.getColor(context, R.color.risk_suspicious);
+        } else if (riskLevel == RiskLevel.NEEDS_ATTENTION) {
+            title = "🔍 Review " + appName + " Message from " + sender + " (" + score + "/100)";
+            color = ContextCompat.getColor(context, R.color.risk_attention);
+        } else {
+            title = "✓ Clean " + appName + " Message from " + sender + " (" + score + "/100)";
+            color = ContextCompat.getColor(context, R.color.risk_low);
+            channelId = CHANNEL_ID_CLEAN;
+            priority = NotificationCompat.PRIORITY_LOW;
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.drawable.ic_shield_check)
+                .setContentTitle(title)
+                .setContentText(reasonSnippet)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .setBigContentTitle(title)
+                        .bigText("App: " + appName + "\nSender: " + sender + "\n\nMessage: \"" + snippet + "\"\n\nRisk Assessment: " + score + "/100 (" + riskLevel.getTitle() + ")\n• " + reasonSnippet))
+                .setColor(color)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setPriority(priority)
+                .addAction(R.drawable.ic_shield_check, "Inspect Threat Report", pendingIntent);
+
+        if (prefs.isNotificationVibrationEnabled() && riskLevel != RiskLevel.LOW_RISK) {
+            builder.setVibrate(VIBRATION_PATTERN_THREAT);
+            builder.setDefaults(NotificationCompat.DEFAULT_SOUND | NotificationCompat.DEFAULT_LIGHTS);
+        }
+
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (manager != null) {
+            manager.notify(notificationId, builder.build());
+            VibrationHelper.triggerNotificationVibration(context, riskLevel);
         }
     }
 }

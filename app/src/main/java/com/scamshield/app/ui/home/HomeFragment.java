@@ -71,6 +71,13 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
     private TextView tvDownloadShieldStatus;
     private MaterialButton btnSimulateDownload;
 
+    // Universal Messaging Watchdog UI
+    private MaterialSwitch switchChatWatchdog;
+    private TextView tvChatWatchdogStatus;
+    private View layoutChatPermissionWarning;
+    private MaterialButton btnGrantChatPermission;
+    private MaterialButton btnSimulateChat;
+
     // Full Phone Device Security Scan UI
     private TextView tvDeviceScanStatus;
 
@@ -83,6 +90,7 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
             loadRecentScans();
             updateSmsShieldUI();
             updateDownloadShieldUI();
+            updateChatWatchdogUI();
         }
     };
 
@@ -153,6 +161,27 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
 
         btnSimulateDownload.setOnClickListener(v -> showDownloadSimulationDialog());
 
+        // Universal Messaging Watchdog Setup
+        switchChatWatchdog = view.findViewById(R.id.switch_chat_watchdog);
+        tvChatWatchdogStatus = view.findViewById(R.id.tv_chat_watchdog_status);
+        layoutChatPermissionWarning = view.findViewById(R.id.layout_chat_permission_warning);
+        btnGrantChatPermission = view.findViewById(R.id.btn_grant_chat_permission);
+        btnSimulateChat = view.findViewById(R.id.btn_simulate_chat);
+
+        switchChatWatchdog.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferencesManager.setUniversalChatWatchdogEnabled(isChecked);
+            if (isChecked && !com.scamshield.app.service.UniversalMessageListenerService.isNotificationAccessGranted(requireContext())) {
+                com.scamshield.app.service.UniversalMessageListenerService.openNotificationAccessSettings(requireContext());
+            }
+            updateChatWatchdogUI();
+        });
+
+        btnGrantChatPermission.setOnClickListener(v -> {
+            com.scamshield.app.service.UniversalMessageListenerService.openNotificationAccessSettings(requireContext());
+        });
+
+        btnSimulateChat.setOnClickListener(v -> showChatSimulationDialog());
+
         // Full Phone Device Security Scan Setup
         tvDeviceScanStatus = view.findViewById(R.id.tv_device_scan_status);
         view.findViewById(R.id.btn_start_device_scan).setOnClickListener(v -> {
@@ -195,6 +224,7 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
         loadRecentScans();
         updateSmsShieldUI();
         updateDownloadShieldUI();
+        updateChatWatchdogUI();
         updateDeviceScanStatusUI();
 
         // Register receiver for real-time background SMS and download updates
@@ -202,6 +232,7 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
             IntentFilter filter = new IntentFilter();
             filter.addAction(SmsReceiver.ACTION_SMS_PROCESSED);
             filter.addAction(DownloadReceiver.ACTION_DOWNLOAD_SCANNED);
+            filter.addAction(com.scamshield.app.service.UniversalMessageListenerService.ACTION_CHAT_SCANNED);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 requireContext().registerReceiver(realTimeUpdateReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
             } else {
@@ -256,6 +287,29 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
         } else {
             tvDownloadShieldStatus.setText(R.string.download_shield_status_inactive);
             tvDownloadShieldStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_tertiary_light));
+        }
+    }
+
+    private void updateChatWatchdogUI() {
+        if (!isAdded() || tvChatWatchdogStatus == null) return;
+
+        boolean isEnabled = preferencesManager.isUniversalChatWatchdogEnabled();
+        switchChatWatchdog.setChecked(isEnabled);
+
+        boolean hasAccess = com.scamshield.app.service.UniversalMessageListenerService.isNotificationAccessGranted(requireContext());
+
+        if (!isEnabled) {
+            tvChatWatchdogStatus.setText(R.string.chat_watchdog_status_inactive);
+            tvChatWatchdogStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_tertiary_light));
+            layoutChatPermissionWarning.setVisibility(View.GONE);
+        } else if (!hasAccess) {
+            tvChatWatchdogStatus.setText(R.string.chat_watchdog_status_permission_needed);
+            tvChatWatchdogStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.risk_suspicious));
+            layoutChatPermissionWarning.setVisibility(View.VISIBLE);
+        } else {
+            tvChatWatchdogStatus.setText(R.string.chat_watchdog_status_active);
+            tvChatWatchdogStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.risk_low));
+            layoutChatPermissionWarning.setVisibility(View.GONE);
         }
     }
 
@@ -375,6 +429,52 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
                         intent.putExtra(ResultActivity.EXTRA_RESULT, result);
                         startActivity(intent);
                     }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void showChatSimulationDialog() {
+        String[] scenarios = {
+                "🚨 WhatsApp: Urgent Bank KYC & OTP Phishing (Score: 85/100)",
+                "💰 Telegram: 2.5 ETH VIP Airdrop Scam (Score: 80/100)",
+                "👤 Messenger: Friend Impersonation & Urgent Wire Scam (Score: 75/100)",
+                "✓ WhatsApp: Clean Lunch Message from Friend (Score: 5/100)"
+        };
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Test Incoming Chat Scam Alert")
+                .setItems(scenarios, (dialog, which) -> {
+                    String appName;
+                    String sender;
+                    String text;
+
+                    switch (which) {
+                        case 0:
+                            appName = "WhatsApp";
+                            sender = "Chase Fraud Security (+1 800-555-0199)";
+                            text = "URGENT: Your Chase checking debit card is temporarily blocked due to unauthorized login attempts. To prevent permanent closure, verify your 4-digit ATM PIN and SSN immediately at http://chase-security-verify.top/login";
+                            break;
+                        case 1:
+                            appName = "Telegram";
+                            sender = "Binance VIP Airdrop Bot";
+                            text = "Congratulations! You have received 2.5 ETH in your VIP wallet. Send 0.08 ETH gas fee to claim before timer expires: https://claim-crypto-giveaway.xyz";
+                            break;
+                        case 2:
+                            appName = "Messenger";
+                            sender = "David Miller";
+                            text = "Hey man! I'm stuck at Heathrow Airport and lost my wallet. Can you urgently send me $400 via Apple Gift Cards or Wire? I will pay you back double tomorrow morning please hurry!";
+                            break;
+                        default:
+                            appName = "WhatsApp";
+                            sender = "Sarah";
+                            text = "Hey! Are we still meeting for lunch at 1 PM today? Let me know if that works for you.";
+                            break;
+                    }
+
+                    com.scamshield.app.service.UniversalMessageListenerService.simulateIncomingChatScan(requireContext(), appName, sender, text);
+                    Toast.makeText(requireContext(), "Simulated " + appName + " chat alert triggered! Check notifications.", Toast.LENGTH_LONG).show();
+                    loadRecentScans();
                 })
                 .setNegativeButton("Cancel", null)
                 .show();

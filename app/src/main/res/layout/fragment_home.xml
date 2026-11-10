@@ -552,6 +552,140 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Universal Messaging Watchdog Card (WhatsApp, Telegram, Messenger, Signal, etc.) -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_chat_watchdog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/brand_primary"
+            app:cardBackgroundColor="@color/surface_variant_light">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_action_message"
+                        app:tint="@color/brand_primary"
+                        android:contentDescription="@null" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/chat_watchdog_title"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_primary_light" />
+
+                        <TextView
+                            android:id="@+id/tv_chat_watchdog_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/chat_watchdog_status_active"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/risk_low" />
+                    </LinearLayout>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/switch_chat_watchdog"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/chat_watchdog_desc"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="2dp"
+                    android:textColor="@color/text_secondary_light" />
+
+                <!-- Supported Apps Pills Banner -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="🛡️ Covers: WhatsApp, Telegram, Messenger, Signal, IMO, Discord &amp; more"
+                    android:textSize="11sp"
+                    android:textStyle="italic"
+                    android:textColor="@color/brand_primary" />
+
+                <!-- Permission Warning Banner (Visible if Notification Access is not granted) -->
+                <LinearLayout
+                    android:id="@+id/layout_chat_permission_warning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="12dp"
+                    android:padding="12dp"
+                    android:background="@color/risk_suspicious_bg"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="⚠️ Notification Access Required"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/risk_high" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Allow Notification Access so ScamShield can read and scan incoming messages from WhatsApp, Telegram, Messenger, etc. on-device without cloud uploads."
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary_light" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_grant_chat_permission"
+                        style="@style/Widget.Material3.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/chat_watchdog_btn_grant"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <!-- Action Simulation Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_simulate_chat"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/chat_watchdog_btn_simulate"
+                    android:textSize="13sp"
+                    app:icon="@drawable/ic_shield_check"
+                    app:iconSize="18dp" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
         <!-- Full Phone Antivirus & Threat Scanner Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_device_scan"
