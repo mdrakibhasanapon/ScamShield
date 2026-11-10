@@ -31,6 +31,7 @@ public class SettingsFragment extends Fragment {
     private MaterialSwitch switchNotifyCleanDownloads;
     private MaterialSwitch switchChatWatchdog;
     private MaterialSwitch switchNotifySafeChats;
+    private MaterialSwitch switchContactSync;
     private MaterialSwitch switchNotificationVibration;
 
     @Nullable
@@ -121,6 +122,13 @@ public class SettingsFragment extends Fragment {
         switchNotifySafeChats.setChecked(preferencesManager.isNotifySafeChatsEnabled());
         switchNotifySafeChats.setOnCheckedChangeListener((buttonView, isChecked) -> {
             preferencesManager.setNotifySafeChatsEnabled(isChecked);
+        });
+
+        // Contact Sync Switch
+        switchContactSync = view.findViewById(R.id.switch_contact_sync_settings);
+        switchContactSync.setChecked(preferencesManager.isContactSyncEnabled());
+        switchContactSync.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferencesManager.setContactSyncEnabled(isChecked);
         });
 
         // Notification Vibration Alerts Switch

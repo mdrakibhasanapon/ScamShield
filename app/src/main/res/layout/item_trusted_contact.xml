@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="1dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/divider_light"
+    app:cardBackgroundColor="@color/surface_light">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Avatar Circle -->
+            <TextView
+                android:id="@+id/tv_avatar_initials"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:gravity="center"
+                android:background="@drawable/badge_risk_low"
+                android:textColor="@color/brand_primary"
+                android:text="SJ"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="14dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_contact_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contact Name"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary_light" />
+
+                <TextView
+                    android:id="@+id/tv_contact_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="+1 (555) 019-9432"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary_light" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_contact_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:text="✓ Trusted"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:background="@drawable/badge_risk_low"
+                android:textColor="@color/risk_low" />
+        </LinearLayout>
+
+        <!-- Suspicious / Toll Warning Message -->
+        <TextView
+            android:id="@+id/tv_suspicious_reason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:background="@color/risk_high_bg"
+            android:textColor="@color/risk_high"
+            android:textSize="11sp"
+            android:lineSpacingExtra="2dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -81,6 +81,9 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
     // Full Phone Device Security Scan UI
     private TextView tvDeviceScanStatus;
 
+    // Trusted Contacts Sync UI
+    private TextView tvContactSyncStatus;
+
     private ActivityResultLauncher<String[]> smsPermissionLauncher;
 
     // Real-time broadcast receiver to catch incoming SMS or download updates while viewing Home
@@ -91,6 +94,7 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
             updateSmsShieldUI();
             updateDownloadShieldUI();
             updateChatWatchdogUI();
+            updateContactSyncUI();
         }
     };
 
@@ -205,6 +209,14 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
         view.findViewById(R.id.btn_open_privacy_guard).setOnClickListener(openPrivacyGuard);
         view.findViewById(R.id.card_privacy_guard).setOnClickListener(openPrivacyGuard);
 
+        // Trusted Contacts & Safe Sender Sync Setup
+        tvContactSyncStatus = view.findViewById(R.id.tv_contact_sync_status);
+        View.OnClickListener openContactSync = v -> {
+            startActivity(new Intent(requireContext(), com.scamshield.app.ui.contacts.ContactSyncActivity.class));
+        };
+        view.findViewById(R.id.btn_open_contact_sync).setOnClickListener(openContactSync);
+        view.findViewById(R.id.card_contact_sync).setOnClickListener(openContactSync);
+
         // Action Buttons Setup
         view.findViewById(R.id.card_action_message).setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), CheckMessageActivity.class));
@@ -233,6 +245,7 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
         updateDownloadShieldUI();
         updateChatWatchdogUI();
         updateDeviceScanStatusUI();
+        updateContactSyncUI();
 
         // Register receiver for real-time background SMS and download updates
         try {
@@ -240,6 +253,7 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
             filter.addAction(SmsReceiver.ACTION_SMS_PROCESSED);
             filter.addAction(DownloadReceiver.ACTION_DOWNLOAD_SCANNED);
             filter.addAction(com.scamshield.app.service.UniversalMessageListenerService.ACTION_CHAT_SCANNED);
+            filter.addAction(com.scamshield.app.util.ContactSyncHelper.ACTION_CONTACTS_SYNCED);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 requireContext().registerReceiver(realTimeUpdateReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
             } else {
@@ -333,6 +347,18 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
         } else {
             tvDeviceScanStatus.setText(getString(R.string.home_device_scan_status_threats, threatCount, lastScore));
             tvDeviceScanStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.risk_high));
+        }
+    }
+
+    private void updateContactSyncUI() {
+        if (!isAdded() || tvContactSyncStatus == null) return;
+        int count = preferencesManager.getSyncedContactsCount();
+        if (count > 0) {
+            tvContactSyncStatus.setText(getString(R.string.home_contact_sync_status_synced, count));
+            tvContactSyncStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.risk_low));
+        } else {
+            tvContactSyncStatus.setText(R.string.home_contact_sync_status_none);
+            tvContactSyncStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.brand_primary));
         }
     }
 

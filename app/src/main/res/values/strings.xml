@@ -257,6 +257,19 @@
     <string name="home_privacy_guard_btn">🛡️ Audit Mic, Location &amp; Contacts</string>
     <string name="home_privacy_guard_status">Privacy Guard Ready</string>
 
+    <!-- Trusted Contact Sync & Safe Sender Whitelist -->
+    <string name="title_contact_sync">Trusted Contacts &amp; Safe Senders</string>
+    <string name="contact_sync_hero_title">Safe Sender Phonebook Sync</string>
+    <string name="contact_sync_hero_subtitle">Sync contacts on-device to whitelist friends &amp; detect unknown strangers posing as family or banks.</string>
+    <string name="btn_sync_contacts_now">🔄 Sync Phone Contacts Now</string>
+    <string name="home_contact_sync_title">Trusted Contacts Sync</string>
+    <string name="home_contact_sync_desc">Sync phone contacts on-device to whitelist trusted senders and detect unknown stranger scams.</string>
+    <string name="home_contact_sync_btn">👥 Sync &amp; View Trusted Contacts</string>
+    <string name="home_contact_sync_status_synced">%1$d Contacts Synced • Safe Sender Shield</string>
+    <string name="home_contact_sync_status_none">Ready to Sync (Tap to start)</string>
+    <string name="settings_contact_sync">Trusted Contacts Sync</string>
+    <string name="settings_contact_sync_desc">Maintain on-device safe contacts list to flag stranger impersonation</string>
+
     <!-- Ad UI Strings -->
     <string name="btn_rewarded_ai_scan">⚡ Watch Ad for Deep AI Cloud Analysis</string>
     <string name="rewarded_ad_loading">Loading sponsor video…</string>

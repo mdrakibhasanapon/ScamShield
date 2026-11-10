@@ -268,6 +268,29 @@
                     android:background="@color/divider_light"
                     android:layout_marginBottom="16dp" />
 
+                <!-- Trusted Contact Sync Toggle -->
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_contact_sync_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_contact_sync"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary_light" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_contact_sync_desc"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary_light"
+                    android:layout_marginBottom="16dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider_light"
+                    android:layout_marginBottom="16dp" />
+
                 <!-- Notification Vibration Alerts Toggle -->
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch_notification_vibration"

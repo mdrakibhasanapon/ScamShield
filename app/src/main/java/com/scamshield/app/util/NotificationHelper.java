@@ -420,21 +420,25 @@ public class NotificationHelper {
                 ? result.getWhyFlagged().get(0)
                 : "Exercise caution before responding or tapping links.";
 
+        boolean isSavedContact = ContactSyncHelper.isTrustedContact(context, sender);
+        String contactLabel = isSavedContact ? " [✓ Contact]" : "";
+        String senderDetail = sender + (isSavedContact ? " (✓ Saved Contact)" : " (⚠️ Not in Saved Contacts)");
+
         int color;
         String channelId = CHANNEL_ID_CHATS;
         int priority = NotificationCompat.PRIORITY_HIGH;
 
         if (riskLevel == RiskLevel.HIGH_RISK) {
-            title = "🚨 " + appName + " Scam Alert: " + sender + " (" + score + "/100)";
+            title = "🚨 " + appName + " Scam Alert: " + sender + contactLabel + " (" + score + "/100)";
             color = ContextCompat.getColor(context, R.color.risk_high);
         } else if (riskLevel == RiskLevel.SUSPICIOUS) {
-            title = "⚠️ Suspicious " + appName + " Chat: " + sender + " (" + score + "/100)";
+            title = "⚠️ Suspicious " + appName + " Chat: " + sender + contactLabel + " (" + score + "/100)";
             color = ContextCompat.getColor(context, R.color.risk_suspicious);
         } else if (riskLevel == RiskLevel.NEEDS_ATTENTION) {
-            title = "🔍 Review " + appName + " Message from " + sender + " (" + score + "/100)";
+            title = "🔍 Review " + appName + " Message: " + sender + contactLabel + " (" + score + "/100)";
             color = ContextCompat.getColor(context, R.color.risk_attention);
         } else {
-            title = "✓ Clean " + appName + " Message from " + sender + " (" + score + "/100)";
+            title = "✓ Clean " + appName + " Message from " + sender + contactLabel + " (" + score + "/100)";
             color = ContextCompat.getColor(context, R.color.risk_low);
             channelId = CHANNEL_ID_CLEAN;
             priority = NotificationCompat.PRIORITY_LOW;
@@ -446,7 +450,7 @@ public class NotificationHelper {
                 .setContentText(reasonSnippet)
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .setBigContentTitle(title)
-                        .bigText("App: " + appName + "\nSender: " + sender + "\n\nMessage: \"" + snippet + "\"\n\nRisk Assessment: " + score + "/100 (" + riskLevel.getTitle() + ")\n• " + reasonSnippet))
+                        .bigText("App: " + appName + "\nSender: " + senderDetail + "\n\nMessage: \"" + snippet + "\"\n\nRisk Assessment: " + score + "/100 (" + riskLevel.getTitle() + ")\n• " + reasonSnippet))
                 .setColor(color)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)

@@ -31,6 +31,9 @@
         android:required="false" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!-- Optional Contact Sync for Trusted Safe Senders and Stranger Impersonation Shield -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
@@ -167,6 +170,14 @@
             android:name=".ui.privacy.PrivacyGuardActivity"
             android:exported="false"
             android:label="@string/title_privacy_guard"
+            android:parentActivityName=".ui.MainActivity"
+            android:theme="@style/Theme.ScamShield" />
+
+        <!-- Trusted Contact Sync & Safe Sender Activity -->
+        <activity
+            android:name=".ui.contacts.ContactSyncActivity"
+            android:exported="false"
+            android:label="@string/title_contact_sync"
             android:parentActivityName=".ui.MainActivity"
             android:theme="@style/Theme.ScamShield" />
 

@@ -140,6 +140,34 @@ public class PreferencesManager {
         prefs.edit().putInt(KEY_LAST_DEVICE_THREAT_COUNT, count).apply();
     }
 
+    public static final String KEY_CONTACT_SYNC_ENABLED = "pref_contact_sync_enabled";
+    public static final String KEY_LAST_CONTACT_SYNC_TIME = "pref_last_contact_sync_time";
+    public static final String KEY_SYNCED_CONTACTS_COUNT = "pref_synced_contacts_count";
+
+    public boolean isContactSyncEnabled() {
+        return prefs.getBoolean(KEY_CONTACT_SYNC_ENABLED, true);
+    }
+
+    public void setContactSyncEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_CONTACT_SYNC_ENABLED, enabled).apply();
+    }
+
+    public long getLastContactSyncTime() {
+        return prefs.getLong(KEY_LAST_CONTACT_SYNC_TIME, 0);
+    }
+
+    public void setLastContactSyncTime(long time) {
+        prefs.edit().putLong(KEY_LAST_CONTACT_SYNC_TIME, time).apply();
+    }
+
+    public int getSyncedContactsCount() {
+        return prefs.getInt(KEY_SYNCED_CONTACTS_COUNT, 0);
+    }
+
+    public void setSyncedContactsCount(int count) {
+        prefs.edit().putInt(KEY_SYNCED_CONTACTS_COUNT, count).apply();
+    }
+
     public void clearAllPreferences() {
         prefs.edit().clear().apply();
     }
