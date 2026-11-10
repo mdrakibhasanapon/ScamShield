@@ -270,6 +270,28 @@
     <string name="settings_contact_sync">Trusted Contacts Sync</string>
     <string name="settings_contact_sync_desc">Maintain on-device safe contacts list to flag stranger impersonation</string>
 
+    <!-- Voice Phishing (Mic) & Regional Threat (Location) Shields -->
+    <string name="mic_shield_title">Voice Phishing &amp; Mic Shield</string>
+    <string name="mic_shield_desc">Scans voice audio and spoken call transcripts for high-pressure bank impersonation, extortion, and OTP theft on-device.</string>
+    <string name="mic_shield_status_active">Voice Shield Active (Mic Permitted)</string>
+    <string name="mic_shield_status_inactive">Voice Shield Paused</string>
+    <string name="mic_shield_status_permission_needed">Microphone Permission Required</string>
+    <string name="mic_shield_btn_grant">Enable Microphone Shield</string>
+    <string name="mic_shield_btn_test">🧪 Test Voice Scam Alert</string>
+
+    <string name="location_radar_title">Regional Threat Radar &amp; Location Guard</string>
+    <string name="location_radar_desc">Uses on-device location to correlate local regional scam campaigns, fake local postal SMS, and rogue Wi-Fi risks.</string>
+    <string name="location_radar_status_active">Regional Radar Active (GPS Permitted)</string>
+    <string name="location_radar_status_inactive">Regional Radar Paused</string>
+    <string name="location_radar_status_permission_needed">Location Permission Required</string>
+    <string name="location_radar_btn_grant">Enable Location Radar</string>
+    <string name="location_radar_btn_test">🧪 Scan Regional Threat Map</string>
+
+    <string name="settings_mic_shield">Voice Phishing (Mic) Protection</string>
+    <string name="settings_mic_shield_desc">Analyze voice calls and spoken transcripts for extortion on-device</string>
+    <string name="settings_location_radar">Regional Threat Radar (Location)</string>
+    <string name="settings_location_radar_desc">Correlate local scam campaigns and public Wi-Fi risks on-device</string>
+
     <!-- Ad UI Strings -->
     <string name="btn_rewarded_ai_scan">⚡ Watch Ad for Deep AI Cloud Analysis</string>
     <string name="rewarded_ad_loading">Loading sponsor video…</string>

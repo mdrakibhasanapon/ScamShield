@@ -143,6 +143,24 @@ public class PreferencesManager {
     public static final String KEY_CONTACT_SYNC_ENABLED = "pref_contact_sync_enabled";
     public static final String KEY_LAST_CONTACT_SYNC_TIME = "pref_last_contact_sync_time";
     public static final String KEY_SYNCED_CONTACTS_COUNT = "pref_synced_contacts_count";
+    public static final String KEY_MIC_SHIELD = "pref_mic_shield_enabled";
+    public static final String KEY_LOCATION_RADAR = "pref_location_radar_enabled";
+
+    public boolean isMicShieldEnabled() {
+        return prefs.getBoolean(KEY_MIC_SHIELD, true);
+    }
+
+    public void setMicShieldEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_MIC_SHIELD, enabled).apply();
+    }
+
+    public boolean isLocationRadarEnabled() {
+        return prefs.getBoolean(KEY_LOCATION_RADAR, true);
+    }
+
+    public void setLocationRadarEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_LOCATION_RADAR, enabled).apply();
+    }
 
     public boolean isContactSyncEnabled() {
         return prefs.getBoolean(KEY_CONTACT_SYNC_ENABLED, true);

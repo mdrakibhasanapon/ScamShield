@@ -32,6 +32,8 @@ public class SettingsFragment extends Fragment {
     private MaterialSwitch switchChatWatchdog;
     private MaterialSwitch switchNotifySafeChats;
     private MaterialSwitch switchContactSync;
+    private MaterialSwitch switchMicShield;
+    private MaterialSwitch switchLocationRadar;
     private MaterialSwitch switchNotificationVibration;
 
     @Nullable
@@ -129,6 +131,20 @@ public class SettingsFragment extends Fragment {
         switchContactSync.setChecked(preferencesManager.isContactSyncEnabled());
         switchContactSync.setOnCheckedChangeListener((buttonView, isChecked) -> {
             preferencesManager.setContactSyncEnabled(isChecked);
+        });
+
+        // Voice Phishing (Mic) Switch
+        switchMicShield = view.findViewById(R.id.switch_mic_shield_settings);
+        switchMicShield.setChecked(preferencesManager.isMicShieldEnabled());
+        switchMicShield.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferencesManager.setMicShieldEnabled(isChecked);
+        });
+
+        // Regional Threat Radar (Location) Switch
+        switchLocationRadar = view.findViewById(R.id.switch_location_radar_settings);
+        switchLocationRadar.setChecked(preferencesManager.isLocationRadarEnabled());
+        switchLocationRadar.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferencesManager.setLocationRadarEnabled(isChecked);
         });
 
         // Notification Vibration Alerts Switch

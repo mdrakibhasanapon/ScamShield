@@ -34,6 +34,13 @@
     <!-- Optional Contact Sync for Trusted Safe Senders and Stranger Impersonation Shield -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
+    <!-- Voice Phishing (Vishing) & Call Audio Scam Detection -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- Regional Threat Radar & Location-Based Scam Alert -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"

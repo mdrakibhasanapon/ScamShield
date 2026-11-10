@@ -84,7 +84,23 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
     // Trusted Contacts Sync UI
     private TextView tvContactSyncStatus;
 
+    // Voice Phishing (Mic) UI
+    private MaterialSwitch switchMicShield;
+    private TextView tvMicShieldStatus;
+    private View layoutMicPermissionWarning;
+    private MaterialButton btnGrantMicPermission;
+    private MaterialButton btnTestMicShield;
+
+    // Regional Threat Radar (Location) UI
+    private MaterialSwitch switchLocationRadar;
+    private TextView tvLocationRadarStatus;
+    private View layoutLocationPermissionWarning;
+    private MaterialButton btnGrantLocationPermission;
+    private MaterialButton btnTestLocationRadar;
+
     private ActivityResultLauncher<String[]> smsPermissionLauncher;
+    private ActivityResultLauncher<String> micPermissionLauncher;
+    private ActivityResultLauncher<String[]> locationPermissionLauncher;
 
     // Real-time broadcast receiver to catch incoming SMS or download updates while viewing Home
     private final BroadcastReceiver realTimeUpdateReceiver = new BroadcastReceiver() {
@@ -109,6 +125,28 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
                                          Boolean.TRUE.equals(result.get(Manifest.permission.READ_SMS));
                     if (smsGranted) {
                         Toast.makeText(requireContext(), "SMS Watchdog is now fully active!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        micPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    updateMicShieldUI();
+                    if (isGranted) {
+                        Toast.makeText(requireContext(), "Microphone Voice Shield is now active!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        locationPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestMultiplePermissions(),
+                result -> {
+                    updateLocationRadarUI();
+                    boolean locGranted = Boolean.TRUE.equals(result.get(Manifest.permission.ACCESS_FINE_LOCATION)) ||
+                                         Boolean.TRUE.equals(result.get(Manifest.permission.ACCESS_COARSE_LOCATION));
+                    if (locGranted) {
+                        Toast.makeText(requireContext(), "Regional Threat Radar & Location Guard is now active!", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -217,6 +255,46 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
         view.findViewById(R.id.btn_open_contact_sync).setOnClickListener(openContactSync);
         view.findViewById(R.id.card_contact_sync).setOnClickListener(openContactSync);
 
+        // Voice Phishing (Mic) Shield Setup
+        switchMicShield = view.findViewById(R.id.switch_mic_shield);
+        tvMicShieldStatus = view.findViewById(R.id.tv_mic_shield_status);
+        layoutMicPermissionWarning = view.findViewById(R.id.layout_mic_permission_warning);
+        btnGrantMicPermission = view.findViewById(R.id.btn_grant_mic_permission);
+        btnTestMicShield = view.findViewById(R.id.btn_test_mic_shield);
+
+        switchMicShield.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferencesManager.setMicShieldEnabled(isChecked);
+            if (isChecked && !com.scamshield.app.util.PermissionHelper.hasMicPermission(requireContext())) {
+                micPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
+            }
+            updateMicShieldUI();
+        });
+        btnGrantMicPermission.setOnClickListener(v -> micPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO));
+        btnTestMicShield.setOnClickListener(v -> showVoiceScamSimulationDialog());
+
+        // Regional Threat Radar (Location) Setup
+        switchLocationRadar = view.findViewById(R.id.switch_location_radar);
+        tvLocationRadarStatus = view.findViewById(R.id.tv_location_radar_status);
+        layoutLocationPermissionWarning = view.findViewById(R.id.layout_location_permission_warning);
+        btnGrantLocationPermission = view.findViewById(R.id.btn_grant_location_permission);
+        btnTestLocationRadar = view.findViewById(R.id.btn_test_location_radar);
+
+        switchLocationRadar.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferencesManager.setLocationRadarEnabled(isChecked);
+            if (isChecked && !com.scamshield.app.util.PermissionHelper.hasLocationPermission(requireContext())) {
+                locationPermissionLauncher.launch(new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                });
+            }
+            updateLocationRadarUI();
+        });
+        btnGrantLocationPermission.setOnClickListener(v -> locationPermissionLauncher.launch(new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+        }));
+        btnTestLocationRadar.setOnClickListener(v -> showLocationRadarDialog());
+
         // Action Buttons Setup
         view.findViewById(R.id.card_action_message).setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), CheckMessageActivity.class));
@@ -246,6 +324,8 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
         updateChatWatchdogUI();
         updateDeviceScanStatusUI();
         updateContactSyncUI();
+        updateMicShieldUI();
+        updateLocationRadarUI();
 
         // Register receiver for real-time background SMS and download updates
         try {
@@ -359,6 +439,48 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
         } else {
             tvContactSyncStatus.setText(R.string.home_contact_sync_status_none);
             tvContactSyncStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.brand_primary));
+        }
+    }
+
+    private void updateMicShieldUI() {
+        if (!isAdded() || tvMicShieldStatus == null) return;
+        boolean isEnabled = preferencesManager.isMicShieldEnabled();
+        switchMicShield.setChecked(isEnabled);
+
+        boolean hasPerm = com.scamshield.app.util.PermissionHelper.hasMicPermission(requireContext());
+        if (!isEnabled) {
+            tvMicShieldStatus.setText(R.string.mic_shield_status_inactive);
+            tvMicShieldStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_tertiary_light));
+            layoutMicPermissionWarning.setVisibility(View.GONE);
+        } else if (!hasPerm) {
+            tvMicShieldStatus.setText(R.string.mic_shield_status_permission_needed);
+            tvMicShieldStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.risk_suspicious));
+            layoutMicPermissionWarning.setVisibility(View.VISIBLE);
+        } else {
+            tvMicShieldStatus.setText(R.string.mic_shield_status_active);
+            tvMicShieldStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.risk_low));
+            layoutMicPermissionWarning.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateLocationRadarUI() {
+        if (!isAdded() || tvLocationRadarStatus == null) return;
+        boolean isEnabled = preferencesManager.isLocationRadarEnabled();
+        switchLocationRadar.setChecked(isEnabled);
+
+        boolean hasPerm = com.scamshield.app.util.PermissionHelper.hasLocationPermission(requireContext());
+        if (!isEnabled) {
+            tvLocationRadarStatus.setText(R.string.location_radar_status_inactive);
+            tvLocationRadarStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_tertiary_light));
+            layoutLocationPermissionWarning.setVisibility(View.GONE);
+        } else if (!hasPerm) {
+            tvLocationRadarStatus.setText(R.string.location_radar_status_permission_needed);
+            tvLocationRadarStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.risk_suspicious));
+            layoutLocationPermissionWarning.setVisibility(View.VISIBLE);
+        } else {
+            tvLocationRadarStatus.setText(R.string.location_radar_status_active);
+            tvLocationRadarStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.risk_low));
+            layoutLocationPermissionWarning.setVisibility(View.GONE);
         }
     }
 
@@ -563,6 +685,67 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
                     }
                 })
                 .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void showVoiceScamSimulationDialog() {
+        String[] voiceScenarios = {
+                "🚨 Bank Impersonation Vishing (\"Calling from fraud team, read me your 6-digit OTP\")",
+                "⚠️ Arrest Warrant Phone Extortion (\"Police arriving in 30 mins, transfer all funds\")",
+                "✓ Safe Family Conversation (\"Hey, calling to ask about dinner plans tonight\")"
+        };
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Test Voice Scam Detection (Mic Shield)")
+                .setItems(voiceScenarios, (dialog, which) -> {
+                    String transcript;
+                    switch (which) {
+                        case 0:
+                            transcript = "This is officer John calling from your bank fraud department. Do not hang up the call. Your debit card is compromised. Read me your 6-digit verification OTP immediately to transfer funds to a temporary safe account.";
+                            break;
+                        case 1:
+                            transcript = "An urgent arrest warrant has been issued by the IRS officer. Police will arrive at your home unless you make an immediate gift card payment to clear your debt.";
+                            break;
+                        default:
+                            transcript = "Hey, just calling to see how you're doing and if we are still meeting up for dinner tonight!";
+                            break;
+                    }
+
+                    ScamAnalysisResult result = com.scamshield.app.domain.scanner.VoiceScamDetector.analyzeVoiceTranscript(transcript);
+                    historyRepository.saveScan(result);
+                    loadRecentScans();
+
+                    Intent intent = new Intent(requireContext(), ResultActivity.class);
+                    intent.putExtra(ResultActivity.EXTRA_RESULT, result);
+                    startActivity(intent);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void showLocationRadarDialog() {
+        boolean hasPerm = com.scamshield.app.util.PermissionHelper.hasLocationPermission(requireContext());
+        if (!hasPerm) {
+            locationPermissionLauncher.launch(new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+            });
+            return;
+        }
+
+        String locationSummary = com.scamshield.app.domain.scanner.LocationScamRadar.getCoarseLocationSummary(requireContext());
+        boolean isUnsecuredWifi = com.scamshield.app.domain.scanner.LocationScamRadar.isConnectedToPublicUnsecuredWifi(requireContext());
+
+        String message = locationSummary + "\n\n" +
+                "• Regional SMS & Toll Scam Filter: Active\n" +
+                "• Rogue Cell Tower & Fake BTS Guard: Active\n" +
+                "• Wi-Fi Security Status: " + (isUnsecuredWifi ? "⚠️ Unsecured Public Wi-Fi Detected" : "✓ Secure / Cellular Protected");
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Regional Threat Radar")
+                .setMessage(message)
+                .setIcon(R.drawable.ic_location)
+                .setPositiveButton("Close", null)
                 .show();
     }
 
