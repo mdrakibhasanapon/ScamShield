@@ -165,7 +165,7 @@ public class SettingsFragment extends Fragment {
         view.findViewById(R.id.tv_what_happens_data).setOnClickListener(v -> showPrivacyExplainerDialog());
 
         view.findViewById(R.id.tv_privacy_policy).setOnClickListener(v -> {
-            showSimpleDialog("Privacy Policy", "ScamShield never accesses private messages, contacts, or call logs without intentional submission. No message bodies are logged or retained on servers. Data processing is local-first.");
+            com.scamshield.app.util.PrivacyConsentHelper.showFullPrivacyPolicyDialog(requireContext());
         });
 
         view.findViewById(R.id.tv_terms).setOnClickListener(v -> {

@@ -86,8 +86,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Prompt user to grant SMS & Notification permissions if needed
-        checkAndPromptSmsPermissions();
+        // First-launch Prominent Disclosure & Privacy Consent Dialog (Google Play Compliant)
+        com.scamshield.app.util.PrivacyConsentHelper.checkAndShowConsentDialog(this, preferencesManager, () -> {
+            checkAndPromptSmsPermissions();
+        });
     }
 
     private void checkAndPromptSmsPermissions() {

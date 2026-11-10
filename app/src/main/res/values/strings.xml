@@ -297,4 +297,15 @@
     <string name="rewarded_ad_loading">Loading sponsor video…</string>
     <string name="rewarded_ad_failed">Sponsor video unavailable. Deep AI scan unlocked directly!</string>
     <string name="rewarded_ad_completed">Reward unlocked! Running Deep AI Cloud Analysis…</string>
+    <!-- First Launch Privacy & Consent Agreement -->
+    <string name="consent_dialog_title">Privacy &amp; Security Agreement</string>
+    <string name="consent_dialog_intro">Welcome to ScamShield. To protect your device, please review our zero-exfiltration privacy standards and sensor governance:</string>
+    <string name="consent_point_ondevice">• 100% On-Device Processing: Your chats, SMS, voice transcripts, OCR screenshots, and locations are NEVER sold, recorded, or uploaded to any cloud server.</string>
+    <string name="consent_point_mic">• Voice Phishing Shield: Microphone audio is evaluated locally in temporary RAM to flag vishing extortion phrases. Audio is never recorded to disk.</string>
+    <string name="consent_point_location">• Regional Threat Radar: Coarse location is used solely to detect unencrypted Wi-Fi hotspots and local scam waves on-device.</string>
+    <string name="consent_point_notif">• Universal Messaging Watchdog: Notification access inspects incoming chat previews (WhatsApp, Telegram, Messenger) locally for phishing links.</string>
+    <string name="consent_point_control">• Full User Sovereignty: You can toggle any shield off in Settings, or permanently erase all local databases with one tap.</string>
+    <string name="consent_btn_agree">I Agree &amp; Accept</string>
+    <string name="consent_btn_decline">Decline &amp; Exit</string>
+    <string name="consent_btn_view_full">Read Full Legal Policy</string>
 </resources>
