@@ -198,6 +198,13 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
         view.findViewById(R.id.btn_open_network_watchdog).setOnClickListener(openNetworkTraffic);
         view.findViewById(R.id.card_network_watchdog).setOnClickListener(openNetworkTraffic);
 
+        // App Permission & Privacy Guard Setup
+        View.OnClickListener openPrivacyGuard = v -> {
+            startActivity(new Intent(requireContext(), com.scamshield.app.ui.privacy.PrivacyGuardActivity.class));
+        };
+        view.findViewById(R.id.btn_open_privacy_guard).setOnClickListener(openPrivacyGuard);
+        view.findViewById(R.id.card_privacy_guard).setOnClickListener(openPrivacyGuard);
+
         // Action Buttons Setup
         view.findViewById(R.id.card_action_message).setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), CheckMessageActivity.class));

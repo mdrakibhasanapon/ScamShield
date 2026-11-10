@@ -248,6 +248,15 @@
     <string name="settings_notify_safe_chats">Alert for Safe Chat Messages</string>
     <string name="settings_notify_safe_chats_desc">Show low-priority confirmation when a safe incoming chat message is scanned</string>
 
+    <!-- App Permission & Privacy Guard (Mic, Location, Contacts, Audio/Calls) -->
+    <string name="title_privacy_guard">App Permission &amp; Privacy Guard</string>
+    <string name="privacy_guard_hero_title">Permission &amp; Spyware Guard</string>
+    <string name="privacy_guard_hero_subtitle">Audits which apps can access your Microphone, GPS Location, Contacts, and Audio in real-time.</string>
+    <string name="home_privacy_guard_title">App Permission &amp; Privacy Guard</string>
+    <string name="home_privacy_guard_desc">Audit which installed apps can access your Microphone, GPS Location, Contacts, and Audio. Detect hidden spyware.</string>
+    <string name="home_privacy_guard_btn">🛡️ Audit Mic, Location &amp; Contacts</string>
+    <string name="home_privacy_guard_status">Privacy Guard Ready</string>
+
     <!-- Ad UI Strings -->
     <string name="btn_rewarded_ai_scan">⚡ Watch Ad for Deep AI Cloud Analysis</string>
     <string name="rewarded_ad_loading">Loading sponsor video…</string>

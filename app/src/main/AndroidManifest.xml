@@ -162,6 +162,14 @@
             android:exported="false"
             android:theme="@style/Theme.ScamShield" />
 
+        <!-- App Permission & Privacy Guard Activity -->
+        <activity
+            android:name=".ui.privacy.PrivacyGuardActivity"
+            android:exported="false"
+            android:label="@string/title_privacy_guard"
+            android:parentActivityName=".ui.MainActivity"
+            android:theme="@style/Theme.ScamShield" />
+
         <!-- On-Device Local Network Sentinel Service -->
         <service
             android:name=".service.NetworkSentinelVpnService"
