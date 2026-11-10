@@ -308,4 +308,18 @@
     <string name="consent_btn_agree">I Agree &amp; Accept</string>
     <string name="consent_btn_decline">Decline &amp; Exit</string>
     <string name="consent_btn_view_full">Read Full Legal Policy</string>
+
+    <!-- Ultimate Defense Expansion Strings -->
+    <string name="home_panic_lockdown_title">🚨 Emergency Scam Panic Lockdown</string>
+    <string name="home_panic_lockdown_sub">Clicked a suspicious link or sent money? Tap immediately to freeze accounts and isolate device.</string>
+    <string name="home_panic_lockdown_btn">Activate Incident Lockdown</string>
+    <string name="home_financial_title">bKash, Nagad &amp; Payment Fraud Shield</string>
+    <string name="home_financial_desc">Real-time detection of fake money-received SMS, mistaken transfer refund traps, and OTP theft.</string>
+    <string name="home_financial_btn_test">🧪 Simulate bKash Scam SMS</string>
+    <string name="settings_clipboard_guard">Clipboard Live Copy Guard</string>
+    <string name="settings_clipboard_guard_desc">Auto-scan copied links and text for phishing threats on copy</string>
+    <string name="settings_call_safety">Incoming Call OTP Warning</string>
+    <string name="settings_call_safety_desc">Show heads-up security advisory when unknown calls arrive</string>
+    <string name="settings_financial_shield">bKash &amp; Payment Fraud Shield</string>
+    <string name="settings_financial_shield_desc">Detect fake MFS money-sent SMS and OTP social engineering</string>
 </resources>

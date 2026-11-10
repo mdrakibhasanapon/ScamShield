@@ -468,4 +468,25 @@ public class NotificationHelper {
             VibrationHelper.triggerNotificationVibration(context, riskLevel);
         }
     }
+
+    public static void showSecurityAlertNotification(Context context, String title, String message, boolean isCritical) {
+        if (context == null) return;
+        createNotificationChannels(context);
+
+        int notificationId = ("alert_" + title + message).hashCode();
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID_ALERTS)
+                .setSmallIcon(R.drawable.ic_shield_check)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                .setColor(ContextCompat.getColor(context, isCritical ? R.color.risk_high : R.color.risk_suspicious))
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (manager != null) {
+            manager.notify(notificationId, builder.build());
+            VibrationHelper.triggerNotificationVibration(context, isCritical ? RiskLevel.HIGH_RISK : RiskLevel.SUSPICIOUS);
+        }
+    }
 }

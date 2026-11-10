@@ -126,6 +126,17 @@ public class NetworkSentinelVpnService extends VpnService implements Runnable {
                     NetworkPacketParser.PacketInfo info = NetworkPacketParser.parseIpPacket(packetBuffer, read);
                     if (info != null && (info.isTlsClientHello || info.isHttp || info.isDns)) {
                         String host = info.hostName != null ? info.hostName : info.destIp;
+                        
+                        boolean isWebThreat = com.scamshield.app.domain.detector.WebThreatFilter.isMaliciousDomainOrHost(host);
+                        if (isWebThreat) {
+                            com.scamshield.app.util.NotificationHelper.showSecurityAlertNotification(
+                                    this,
+                                    "🛑 Web Phishing Intercepted!",
+                                    "ScamShield Web Sentinel detected connection to high-risk domain: " + host,
+                                    true
+                            );
+                        }
+
                         NetworkTrafficItem item = NetworkThreatEvaluator.evaluateTraffic(
                                 "android.app.active",
                                 "Active Application",
@@ -136,7 +147,7 @@ public class NetworkSentinelVpnService extends VpnService implements Runnable {
                                 NetworkTrafficItem.Direction.UPLOAD,
                                 read,
                                 0,
-                                "Direct packet inspection via on-device Network Sentinel"
+                                isWebThreat ? "MALICIOUS PHISHING DOMAIN BLOCKED" : "Direct packet inspection via on-device Network Sentinel"
                         );
                         repo.logTraffic(item);
                     }

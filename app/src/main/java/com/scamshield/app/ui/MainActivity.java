@@ -92,6 +92,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        com.scamshield.app.util.ClipboardGuardHelper.checkClipboardOnResume(this);
+    }
+
     private void checkAndPromptSmsPermissions() {
         if (!preferencesManager.isRealTimeSmsShieldEnabled()) return;
 

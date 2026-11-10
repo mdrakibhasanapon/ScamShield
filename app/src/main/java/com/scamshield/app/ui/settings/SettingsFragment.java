@@ -147,6 +147,33 @@ public class SettingsFragment extends Fragment {
             preferencesManager.setLocationRadarEnabled(isChecked);
         });
 
+        // Clipboard Live Copy Guard Switch
+        MaterialSwitch switchClipboard = view.findViewById(R.id.switch_clipboard_guard_settings);
+        if (switchClipboard != null) {
+            switchClipboard.setChecked(preferencesManager.isClipboardGuardEnabled());
+            switchClipboard.setOnCheckedChangeListener((btn, isChecked) -> {
+                preferencesManager.setClipboardGuardEnabled(isChecked);
+            });
+        }
+
+        // Call Safety Switch
+        MaterialSwitch switchCallSafety = view.findViewById(R.id.switch_call_safety_settings);
+        if (switchCallSafety != null) {
+            switchCallSafety.setChecked(preferencesManager.isCallSafetyShieldEnabled());
+            switchCallSafety.setOnCheckedChangeListener((btn, isChecked) -> {
+                preferencesManager.setCallSafetyShieldEnabled(isChecked);
+            });
+        }
+
+        // Financial Fraud Switch
+        MaterialSwitch switchFinancial = view.findViewById(R.id.switch_financial_shield_settings);
+        if (switchFinancial != null) {
+            switchFinancial.setChecked(preferencesManager.isFinancialShieldEnabled());
+            switchFinancial.setOnCheckedChangeListener((btn, isChecked) -> {
+                preferencesManager.setFinancialShieldEnabled(isChecked);
+            });
+        }
+
         // Notification Vibration Alerts Switch
         switchNotificationVibration = view.findViewById(R.id.switch_notification_vibration);
         switchNotificationVibration.setChecked(preferencesManager.isNotificationVibrationEnabled());

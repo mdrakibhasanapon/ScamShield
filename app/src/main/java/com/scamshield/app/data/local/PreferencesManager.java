@@ -145,6 +145,10 @@ public class PreferencesManager {
     public static final String KEY_SYNCED_CONTACTS_COUNT = "pref_synced_contacts_count";
     public static final String KEY_MIC_SHIELD = "pref_mic_shield_enabled";
     public static final String KEY_LOCATION_RADAR = "pref_location_radar_enabled";
+    public static final String KEY_CLIPBOARD_GUARD = "pref_clipboard_guard_enabled";
+    public static final String KEY_CALL_SAFETY_SHIELD = "pref_call_safety_shield_enabled";
+    public static final String KEY_WEB_SENTINEL = "pref_web_sentinel_enabled";
+    public static final String KEY_FINANCIAL_SHIELD = "pref_financial_shield_enabled";
 
     public boolean isMicShieldEnabled() {
         return prefs.getBoolean(KEY_MIC_SHIELD, true);
@@ -160,6 +164,38 @@ public class PreferencesManager {
 
     public void setLocationRadarEnabled(boolean enabled) {
         prefs.edit().putBoolean(KEY_LOCATION_RADAR, enabled).apply();
+    }
+
+    public boolean isClipboardGuardEnabled() {
+        return prefs.getBoolean(KEY_CLIPBOARD_GUARD, true);
+    }
+
+    public void setClipboardGuardEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_CLIPBOARD_GUARD, enabled).apply();
+    }
+
+    public boolean isCallSafetyShieldEnabled() {
+        return prefs.getBoolean(KEY_CALL_SAFETY_SHIELD, true);
+    }
+
+    public void setCallSafetyShieldEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_CALL_SAFETY_SHIELD, enabled).apply();
+    }
+
+    public boolean isWebSentinelEnabled() {
+        return prefs.getBoolean(KEY_WEB_SENTINEL, true);
+    }
+
+    public void setWebSentinelEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_WEB_SENTINEL, enabled).apply();
+    }
+
+    public boolean isFinancialShieldEnabled() {
+        return prefs.getBoolean(KEY_FINANCIAL_SHIELD, true);
+    }
+
+    public void setFinancialShieldEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_FINANCIAL_SHIELD, enabled).apply();
     }
 
     public boolean isContactSyncEnabled() {

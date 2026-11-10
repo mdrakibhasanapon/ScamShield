@@ -166,6 +166,21 @@
             </intent-filter>
         </receiver>
 
+        <!-- Real-Time Incoming Call Safety Alert Receiver -->
+        <receiver
+            android:name=".receiver.CallSafetyReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 1-Tap Emergency Panic Lockdown Activity -->
+        <activity
+            android:name=".ui.emergency.EmergencyLockdownActivity"
+            android:exported="false"
+            android:theme="@style/Theme.ScamShield" />
+
         <!-- App Data & Network Traffic Monitor Activity -->
         <activity
             android:name=".ui.network.NetworkTrafficActivity"

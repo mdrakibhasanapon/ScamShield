@@ -295,6 +295,40 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
         }));
         btnTestLocationRadar.setOnClickListener(v -> showLocationRadarDialog());
 
+        // 🚨 Emergency Panic Lockdown Button & Card
+        View cardPanic = view.findViewById(R.id.card_panic_lockdown);
+        if (cardPanic != null) {
+            cardPanic.setOnClickListener(v -> {
+                startActivity(new Intent(requireContext(), com.scamshield.app.ui.emergency.EmergencyLockdownActivity.class));
+            });
+        }
+        View btnTriggerPanic = view.findViewById(R.id.btn_trigger_panic);
+        if (btnTriggerPanic != null) {
+            btnTriggerPanic.setOnClickListener(v -> {
+                startActivity(new Intent(requireContext(), com.scamshield.app.ui.emergency.EmergencyLockdownActivity.class));
+            });
+        }
+
+        // 📊 Weekly Security Health Score Card
+        View cardHealth = view.findViewById(R.id.card_security_health);
+        if (cardHealth != null) {
+            updateHealthScoreUI(view);
+            cardHealth.setOnClickListener(v -> showSecurityHealthDialog());
+        }
+
+        // 💰 Financial Fraud Shield Setup
+        MaterialSwitch switchFinancial = view.findViewById(R.id.switch_financial_shield);
+        if (switchFinancial != null) {
+            switchFinancial.setChecked(preferencesManager.isFinancialShieldEnabled());
+            switchFinancial.setOnCheckedChangeListener((btn, isChecked) -> {
+                preferencesManager.setFinancialShieldEnabled(isChecked);
+            });
+        }
+        View btnTestFinancial = view.findViewById(R.id.btn_test_financial_shield);
+        if (btnTestFinancial != null) {
+            btnTestFinancial.setOnClickListener(v -> showFinancialFraudSimulationDialog());
+        }
+
         // Action Buttons Setup
         view.findViewById(R.id.card_action_message).setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), CheckMessageActivity.class));
@@ -746,6 +780,79 @@ public class HomeFragment extends Fragment implements HistoryAdapter.OnItemClick
                 .setMessage(message)
                 .setIcon(R.drawable.ic_location)
                 .setPositiveButton("Close", null)
+                .show();
+    }
+
+    private void updateHealthScoreUI(View view) {
+        if (view == null || getContext() == null) return;
+        com.scamshield.app.domain.scanner.SecurityHealthAuditor.HealthReport report =
+                com.scamshield.app.domain.scanner.SecurityHealthAuditor.generateWeeklyHealthReport(requireContext());
+
+        TextView tvBadge = view.findViewById(R.id.tv_health_grade_badge);
+        TextView tvTitle = view.findViewById(R.id.tv_health_status_title);
+        TextView tvSub = view.findViewById(R.id.tv_health_status_sub);
+
+        if (tvBadge != null) tvBadge.setText(report.getGrade());
+        if (tvTitle != null) tvTitle.setText(report.getStatusTitle());
+        if (tvSub != null) tvSub.setText(report.getScorePercentage() + "% Device Safety Score • " + report.getActiveShields().size() + " active defenses");
+    }
+
+    private void showSecurityHealthDialog() {
+        if (getContext() == null) return;
+        com.scamshield.app.domain.scanner.SecurityHealthAuditor.HealthReport report =
+                com.scamshield.app.domain.scanner.SecurityHealthAuditor.generateWeeklyHealthReport(requireContext());
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Weekly Security Health Score: ").append(report.getScorePercentage()).append("% (Grade ").append(report.getGrade()).append(")\n\n");
+        sb.append("ACTIVE DEFENSE MODULES (").append(report.getActiveShields().size()).append("):\n");
+        for (String shield : report.getActiveShields()) {
+            sb.append("• ").append(shield).append("\n");
+        }
+        if (!report.getRecommendations().isEmpty()) {
+            sb.append("\nRECOMMENDED ACTIONS:\n");
+            for (String rec : report.getRecommendations()) {
+                sb.append("⚠️ ").append(rec).append("\n");
+            }
+        } else {
+            sb.append("\n🎉 All threat sensors and defensive shields are operating at peak efficiency!");
+        }
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("📊 Security Health & Threat Audit")
+                .setMessage(sb.toString())
+                .setIcon(R.drawable.ic_shield_check)
+                .setPositiveButton("Done", null)
+                .show();
+    }
+
+    private void showFinancialFraudSimulationDialog() {
+        if (getContext() == null) return;
+        String[] samples = {
+                "🚨 Fake 'Mistakenly Sent 10,000 Tk' bKash SMS",
+                "🚨 OTP Verification PIN Theft Attempt",
+                "✅ Legitimate Personal bKash Transfer"
+        };
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("💰 Simulate Mobile Financial Scam")
+                .setItems(samples, (dialog, which) -> {
+                    String sampleText;
+                    if (which == 0) {
+                        sampleText = "You have received Tk 10,000.00 from 01712345678. Ref: Gift. Fee Tk 0.00. Balance Tk 10,050.00. TrxID 9K7A2BC1D8. ভাই ভুল করে ১০,০০০ টাকা চলে গেছে দয়া করে এখনই টাকা ফেরত দিন নাহলে পুলিশে দেব।";
+                    } else if (which == 1) {
+                        sampleText = "bKash: Your secret verification OTP is 492018. বিকাশ সিকিউরিটি টিম: আপনার একাউন্ট সাময়িক ব্লক করা হয়েছে, ভেরিফিকেশন পিন কোড ও ওটিপি এখনই এই নম্বরে মেসেজ করুন।";
+                    } else {
+                        sampleText = "You have received Tk 500.00 from 01987654321. Ref: Lunch. Fee Tk 0.00. Balance Tk 550.00. TrxID 8M2N5P9Q1Z.";
+                    }
+
+                    com.scamshield.app.data.model.ScamAnalysisResult result =
+                            com.scamshield.app.domain.detector.FinancialFraudDetector.analyzeFinancialText(sampleText);
+
+                    Intent intent = new Intent(requireContext(), com.scamshield.app.ui.result.ResultActivity.class);
+                    intent.putExtra(com.scamshield.app.ui.result.ResultActivity.EXTRA_RESULT, result);
+                    startActivity(intent);
+                })
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
